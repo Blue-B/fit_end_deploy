@@ -1,0 +1,299 @@
+body, html {
+  margin: 0;
+  padding: 0;
+  height: 100%;
+  overflow: auto; /* PC에서 스크롤 허용 */
+}
+
+.Main_Container {
+  position: relative;
+  width: 360px; /* 기본 모바일 사이즈 */
+  height: 700px; /* 기본 모바일 사이즈 */
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: space-between;
+  text-align: center;
+  margin: 0 auto; /* PC에서 중앙 정렬 */
+  background: transparent;
+  padding: 20px;
+  overflow: hidden;
+  border-radius: 10px;
+  box-shadow: 0 0 10px rgba(0, 0, 0, 0.2); /* PC에서 모바일 느낌 */
+}
+
+.MainImage {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  position: absolute;
+  top: 0;
+  left: 0;
+  z-index: -1;
+}
+
+.RecordBodyTitle {
+  font-family: 'ThinkBold', sans-serif;
+  font-size: clamp(24px, 8vw, 32px); /* 반응형 글꼴 크기 */
+  position: absolute;
+  top: 15px;
+  left: 50%;
+  transform: translateX(-50%);
+  z-index: 2;
+  color: white;
+  padding-bottom: 5px;
+  border-bottom: 4px solid #C9F439;
+  font-weight: bold;
+}
+
+.RecordBodyMainTitle {
+  position: absolute;
+  top: 42%; /* 위치 고정 */
+  left: 50%;
+  transform: translateX(-50%);
+  z-index: 3;
+  font-size: clamp(20px, 6vw, 28px); /* 반응형 글꼴 크기 */
+  color: #fff;
+}
+
+.backgroundstar {
+  position: absolute;
+  top: -20%;
+  left: clamp(-15%, -45px, -10%); /* 반응형 왼쪽 위치 */
+  width: clamp(300px, 130%, 500px); /* 반응형 크기 */
+  z-index: 1;
+}
+
+.backgroundFrame4,
+.backgroundFrame3,
+.backgroundFrame5 {
+  position: absolute;
+  top: clamp(-15%, -13.3%, -10%); /* 반응형 위쪽 위치 */
+  width: clamp(300px, 115%, 420px); /* 반응형 크기 */
+  z-index: 3;
+}
+
+.backgroundFrame4 {
+  top: clamp(-12%, -10.3%, -8%); /* 반응형 위쪽 위치 */
+  left: clamp(2%, 15.5px, 5%); /* 반응형 왼쪽 위치 */
+  width: clamp(280px, 100%, 373px); /* 반응형 크기 */
+}
+
+.backgroundFrame3 {
+  right: clamp(1%, 5px, 3%); /* 반응형 오른쪽 위치 */
+}
+
+.backgroundFrame5 {
+  left: clamp(1%, 9px, 3%); /* 반응형 왼쪽 위치 */
+}
+
+.gender-buttons {
+  position: absolute;
+  top: 50%; /* 랭킹 리스트와 겹치지 않도록 고정 */
+  left: 50%;
+  transform: translateX(-50%);
+  display: flex;
+  gap: clamp(10px, 3vw, 15px); /* 반응형 간격 */
+  z-index: 3;
+}
+
+.gender-btn {
+  background: #7e3a99;
+  color: white;
+  border: none;
+  padding: clamp(5px, 1.5vw, 10px); /* 반응형 패딩 */
+  border-radius: 5px;
+  cursor: pointer;
+}
+
+.gender-btn.active {
+  background: #e7a9f3;
+  color: rgb(133, 51, 129);
+}
+
+.genderbtn_title {
+  font-family: 'Agdasima', sans-serif;
+  font-size: clamp(12px, 3vw, 16px); /* 반응형 글꼴 크기 */
+}
+
+/* 1~3등 프로필 */
+.top-rank-container {
+  display: flex;
+  justify-content: center;
+  align-items: flex-end;
+  gap: clamp(20px, 10vw, 50px); /* 반응형 간격 */
+  position: absolute;
+  top: clamp(100px, 20vh, 150px); /* 반응형 위치 */
+  left: 50%;
+  transform: translateX(-50%);
+  width: 100%;
+  height: clamp(80px, 20vh, 120px); /* 반응형 높이 */
+  z-index: 2;
+}
+
+.rank-profile {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.rank-1 {
+  transform: scale(1.7);
+  order: 2;
+  margin-bottom: clamp(10px, 3vh, 20px); /* 반응형 여백 */
+}
+
+.rank-2,
+.rank-3 {
+  transform: scale(1.2);
+}
+
+.rank-2 {
+  order: 1;
+}
+
+.rank-3 {
+  order: 3;
+}
+
+/* 랭킹 리스트 */
+.ranking_list {
+  font-family: 'Agdasima', sans-serif;
+  width: 95%;
+  height: clamp(200px, 35vh, 220px); /* 반응형 높이 */
+  overflow-y: auto;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  position: absolute;
+  top: clamp(350px, 60vh, 410px); /* 반응형 위치 */
+  left: 50%;
+  transform: translateX(-50%);
+  padding-top: clamp(10px, 2vh, 20px); /* 반응형 패딩 */
+  z-index: 2;
+}
+
+.ranking-item {
+  display: flex;
+  align-items: center;
+  width: 80%;
+  padding: clamp(5px, 1.5vh, 8px); /* 반응형 패딩 */
+  justify-content: space-between;
+  color: #fff;
+}
+
+.rank-name {
+  color: #fff;
+}
+
+.profile-image {
+  width: clamp(40px, 15vw, 60px); /* 반응형 크기 */
+  height: clamp(40px, 15vw, 60px); /* 반응형 크기 */
+  border-radius: 50%;
+  background: gray;
+}
+
+.rank-position {
+  font-weight: bold;
+}
+
+/* 하단 버튼 */
+.Button-Container {
+  display: flex;
+  justify-content: space-evenly;
+  width: 100%;
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  padding: 10px 0;
+  background: rgba(0, 0, 0, 0.8);
+}
+
+.Button-Item {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.ButtonImage {
+  width: clamp(25px, 8vw, 30px); /* 반응형 크기 */
+  height: clamp(25px, 8vw, 30px); /* 반응형 크기 */
+  cursor: pointer;
+}
+
+.Span {
+  font-size: clamp(8px, 2.5vw, 10px); /* 반응형 글꼴 크기 */
+  color: white;
+  text-align: center;
+  margin-top: 5px;
+}
+
+.ButtonImage:hover {
+  opacity: 0.7;
+}
+
+/* 모바일 반응형 */
+@media (max-width: 768px) {
+  .Main_Container {
+    width: 100vw;
+    height: 100vh;
+    margin: 0;
+    padding: 0; /* 모바일에서 패딩 제거 */
+    border-radius: 0;
+    box-shadow: none;
+  }
+
+  .RecordBodyTitle {
+    top: 5vh;
+  }
+
+  .RecordBodyMainTitle {
+    top: 40vh;
+  }
+
+  .backgroundstar {
+    top: -17vh; /* 모바일에서 배경 위치 조정 */
+    left: -23vw;
+    width: 150vw; /* 모바일에서 배경 크기 확장 */
+  }
+
+  .backgroundFrame4,
+  .backgroundFrame3,
+  .backgroundFrame5 {
+    top: -10vh; /* 모바일에서 프레임 위치 조정 */
+    width: 120vw; /* 모바일에서 프레임 크기 확장 */
+  }
+
+  .backgroundFrame4 {
+    top: -2.3vh;
+    left: 5.3vw;
+    width: 90vw;
+  }
+
+  .backgroundFrame3 {
+    top:-22vw;
+    right: 0.4vw;
+  }
+
+  .backgroundFrame5 {
+    top:-22vw;
+    left:1.9vw;
+  }
+
+  .top-rank-container {
+    top: 15vh;
+    height: 20vh;
+  }
+
+  .ranking_list {
+    top: 55vh;
+    height: 35vh;
+  }
+
+  .Button-Container {
+    top: auto; /* 고정 위치 해제 */
+    bottom: 0;
+    padding: 10px 0;
+    background: rgba(0, 0, 0, 0.8);
+  }
+}

@@ -1,0 +1,162 @@
+body, html {
+    margin: 0;
+    padding: 0;
+    height: 100%;
+    overflow: auto; /* PC에서 스크롤 허용 */
+  }
+  
+  @font-face {
+    font-family: 'ThinkBold';
+    src: url('/public/font/ThinkBold.woff2') format('woff2');
+    font-weight: normal;
+    font-style: normal;
+  }
+  
+  .Main_Container {
+    position: relative;
+    width: 360px; /* PC에서 모바일 사이즈 */
+    height: 700px; /* PC에서 모바일 사이즈 */
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center; /* 콘텐츠 중앙 정렬 */
+    margin: 0 auto; /* PC에서 중앙 정렬 */
+    background: transparent;
+    padding: 20px;
+    overflow: hidden;
+    border-radius: 10px;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.2); /* PC에서 모바일 느낌 */
+  }
+  
+  .MainImage {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    position: absolute;
+    top: 0;
+    left: 0;
+    z-index: 0;
+  }
+  
+  .MainImage_Vector {
+    width: 100%;
+    height: 87%;
+    position: absolute;
+    top: 13%;
+    left: 0;
+    object-fit: cover;
+    z-index: 2;
+  }
+  
+  .Main_Title {
+    font-family: 'ThinkBold', sans-serif;
+    font-size: 50px;
+    font-weight: normal;
+    color: black;
+    margin-top: 30%;
+    margin-bottom: 20px;
+    text-align: center;
+    z-index: 3;
+  }
+  
+  .Main_Title::before {
+    width: 120%;
+    margin-left: -15px;
+    content: 'Welcome to'; /* 첫 번째 줄 텍스트 */
+    display: block; /* 줄 바꿈 적용 */
+  }
+  
+  .Main_Title::after {
+    content: 'FitEnd'; /* 'FitEnd'를 두 번째 줄로 표시 */
+    display: block; /* 줄 바꿈 적용 */
+  }
+  
+  form {
+    position: relative;
+    width: 80%;
+    padding: 0;
+    background: none;
+    z-index: 3;
+  }
+  
+  .INPUTTEXT1,
+  .INPUTTEXT2 {
+    width: 100%;
+    padding: 10px;
+    margin: 5px 0 15px;
+    border: none;
+    border-radius: 5px;
+    background: rgba(255, 255, 255, 0.9);
+    color: black;
+    font-size: 14px;
+  }
+  
+  .INPUTTEXT1::placeholder,
+  .INPUTTEXT2::placeholder {
+    color: rgba(0, 0, 0, 0.5);
+  }
+  
+  .USERLOGIN_PASSWORD {
+    font-family: 'Agdasima', sans-serif;
+    margin-right: 75%;
+  }
+  
+  .LOGIN_BUTTON {
+    width: 107%;
+    height: 20%;
+    margin-top: 20px;
+    border: none;
+    border-radius: 10px;
+    background-color: black;
+    color: white;
+    cursor: pointer;
+  }
+  
+  .SIGNUP_BUTTON {
+    margin: 50px;
+    font-family: 'Agdasima', sans-serif;
+    margin-top: 10px;
+    text-align: center;
+  }
+  
+  .BUTTON_SIGN_UP {
+    border: 0;
+    background-color: transparent;
+    color: #3D7FE7;
+    cursor: pointer;
+  }
+  
+  /* 모바일 반응형 */
+  @media (max-width: 768px) {
+    .Main_Container {
+      width: 100vw;
+      height: 100vh;
+      border-radius: 0;
+      box-shadow: none;
+      padding: 0; /* 모바일에서 패딩 제거 */
+    }
+  
+    .Main_Title {
+      font-size: clamp(30px, 10vw, 50px); /* 반응형 폰트 크기 */
+      margin-top: 20vh; /* 모바일에서 더 자연스럽게 */
+    }
+  
+    .INPUTTEXT1,
+    .INPUTTEXT2 {
+      font-size: clamp(12px, 4vw, 14px); /* 반응형 폰트 크기 */
+    }
+  
+    .LOGIN_BUTTON {
+      height: 5vh; /* 모바일에서 버튼 높이 조정 */
+      font-size: clamp(14px, 5vw, 18px);
+    }
+  
+    .SIGNUP_BUTTON {
+      margin: 20px 0; /* 모바일에서 간격 조정 */
+      font-size: clamp(12px, 4vw, 16px);
+    }
+  
+    .BUTTON_SIGN_UP {
+      font-size: clamp(12px, 4vw, 16px);
+    }
+  }

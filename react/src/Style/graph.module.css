@@ -1,0 +1,398 @@
+body, html {
+  margin: 0;
+  padding: 0;
+  height: 100%;
+  overflow: auto; /* PC에서 스크롤 허용 */
+}
+
+@font-face {
+  font-family: 'ThinkBold';
+  src: url('/public/font/ThinkBold.woff2') format('woff2');
+  font-weight: normal;
+  font-style: normal;
+}
+
+.recharts-responsive-container{
+  margin-right:4vw;
+}
+
+.Graph_Container {
+  position: relative; /* Parents needs relative positioning */
+  width: 360px;
+  height: 700px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: flex-start; /* 콘텐츠를 상단부터 시작 */
+  text-align: center;
+  margin: 0 auto; /* PC에서 중앙 정렬 */
+  background: transparent;
+  padding: 20px;
+  overflow: visible; /* Allow scrollable content */
+  border-radius: 10px;
+  box-shadow: 0 0 10px rgba(0, 0, 0, 0.2); /* PC에서 모바일 느낌 */
+}
+
+.GraphTitle {
+  font-family: 'ThinkBold', sans-serif;
+  font-size: 50px;
+  position: absolute;  /* 고정된 위치로 설정 */
+  top: 30px;       /* 상단에서 100px 아래로 위치 */
+  left: 50%;        /* 화면 가로 중앙에 배치 */
+  transform: translateX(-50%); /* 정확한 중앙 정렬을 위한 오프셋 */
+  z-index: 1;         
+  color: white;
+  padding-bottom: 5px;  /* 텍스트와 밑줄 사이 간격 설정 */
+  border-bottom: 4px solid #C9F439; /* 밑줄 색상과 두께 설정 */
+  font-weight: bold;
+  margin-bottom: 20px;
+}
+
+.Graph_harder {
+  position: relative;
+  font-size: 20px;
+  text-align: right;
+  color: white;
+  padding-bottom: 5px;  /* 텍스트와 밑줄 사이 간격 설정 */
+  border-bottom: 1px solid #8E8E8E; /* 밑줄 색상과 두께 설정 */
+}
+
+.Graph_harder p {
+  margin-bottom: 10px; 
+}
+
+.Graph_harder p:first-of-type {
+  margin-bottom: 5px;
+}
+
+.Graph_harder p:last-of-type {
+  margin-top: 5px; 
+}
+
+.Inbodyscore_div {
+  color: white;
+  margin-top: 100px; /* GraphTitle 아래 여백 */
+}
+
+.inbodyscore {
+  font-family: 'ThinkBold', sans-serif;
+  font-size: 50px;
+  color: #C9F439;
+  margin: 0;
+}
+
+.inbodyscore_text {
+  margin-top: 5px;
+  margin-bottom: 5px;
+}
+
+.graphtext {
+  margin: 0;
+}
+
+.item {
+  display: flex;
+  flex-direction: column;  /* 세로로 정렬 (아이콘과 텍스트) */
+  align-items: center;  /* 아이콘과 텍스트를 중앙 정렬 */
+  text-align: center;
+}
+
+.icon {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  margin-top: 10px;
+  padding: 5px;
+  color: white;
+}
+
+.text {
+  margin-bottom: 50px;
+  color: white;
+}
+
+.Central_Menu {
+  margin-top: 20px;
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.Button-Container {
+  display: flex;
+  justify-content: space-evenly;
+  width: 100%;
+  position: absolute; /* 부모 요소인 .MainImage를 기준으로 고정 */
+  bottom: 0; /* 하단 고정 */
+  left: 0;
+  padding: 10px 0; /* 더 넉넉한 패딩 */
+  background: transparent; /* 배경 투명 */
+  z-index: 1;
+}
+
+.Button-Item {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  margin: 0 5px; /* 버튼 간 간격 조정 */
+}
+
+.ButtonImage {
+  width: 30px;
+  height: 30px;
+  cursor: pointer;
+}
+
+.Span {
+  font-size: 10px;
+  color: white; /* 텍스트 색상 흰색 */
+  text-align: center;
+  margin-top: 5px;
+}
+
+.ButtonImage:hover {
+  opacity: 0.7;
+}
+
+.container {
+  display: flex;
+  align-items: center; /* Vertically centers the content */
+  gap: 20px; /* Adjust space between each element */
+  margin: 0;
+}
+
+.wight, .height, .PH, .Bmi {
+  display: flex;
+  align-items: center; /* Vertically centers the text and images */
+  margin-right: 95px;
+  color: white;
+}
+
+.weight_button {
+  width: 20px; /* Adjust the size of the buttons */
+  height: 20px;
+  margin-right: 10px; /* Adds space between the button and the text */
+}
+
+/* 그래프 크기와 위치 조정 */
+.recharts-responsive-container {
+  width: 100%;
+  height: 250px; /* 고정 높이 */
+}
+
+/* 차트 제목 스타일 (필요한 경우 추가) */
+.Graph-section h2 {
+  color: #fff;
+  font-size: 1.5rem;
+  margin-bottom: 10px;
+  text-align: center;
+  font-weight: bold;
+}
+
+/* 레전드, 툴팁에 대한 스타일 */
+.recharts-legend-item {
+  font-size: 12px;
+  color: #fff;
+  font-weight: 500;
+}
+
+/* 툴팁 스타일 */
+.recharts-tooltip-item {
+  color: #000;
+}
+
+/* X축 레이블 스타일 */
+.recharts-xAxis text {
+  fill: #fff;
+  font-size: 12px;
+  font-weight: 500;
+}
+
+/* Y축 레이블 스타일 */
+.recharts-yAxis text {
+  fill: #fff;
+  font-size: 12px;
+  font-weight: 500;
+}
+
+/* 그래프 라인 스타일 */
+.recharts-line {
+  stroke: #C9F439; /* 라인 색상 */
+  stroke-width: 3;  /* 선의 두께 */
+  filter: drop-shadow(0 0 15px rgba(201, 244, 57, 0.8)); /* 빛나는 그림자 효과 */
+}
+
+/* 그래프의 점에 대한 스타일 */
+.recharts-dot {
+  fill: #C9F439; /* 점 색상 */
+  stroke: white;
+  stroke-width: 2px;
+}
+
+/* 툴팁 스타일 */
+.recharts-tooltip-wrapper {
+  background-color: rgba(0, 0, 0, 0.7); /* 툴팁 배경 */
+  border-radius: 8px;
+}
+
+.recharts-tooltip-item {
+  color: white; /* 툴팁 내용 텍스트 색상 */
+  font-size: 14px;
+  font-weight: 600;
+}
+
+.recharts-tooltip-label {
+  color: #C9F439; /* 레이블 색상 */
+}
+
+/* Y축 그리드 스타일 */
+.recharts-cartesianGrid line {
+  stroke: rgba(255, 255, 255, 0.2); /* 그리드 색상 */
+  stroke-width: 1px;
+  stroke-dasharray: 5 5; /* 점선 스타일 */
+}
+
+/* X축 그리드 스타일 */
+.recharts-cartesianGrid path {
+  stroke: rgba(255, 255, 255, 0.2); /* X축 그리드 색상 */
+}
+
+/*  */
+/*  */
+/*  */
+
+@font-face {
+  font-family: 'ThinkBold';
+  src: url('/public/font/ThinkBold.woff2') format('woff2');
+  font-weight: normal;
+  font-style: normal;
+}
+
+.MainImage {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  position: absolute;
+  top: 0;
+  left: 0;
+  z-index: -1; 
+}
+
+.Button-Container {
+  display: flex;
+  justify-content: space-evenly;  /* 버튼들 간의 간격을 일정하게 나누기 */
+  width: 100%;
+  position: absolute;  /* 화면 중앙에 고정 */
+  bottom: 0; /* 하단 고정 */
+  left: 0;
+  padding: 10px 0; /* 더 넉넉한 패딩 */
+  background: transparent; /* 배경 투명 */
+  z-index: 1;
+}
+
+.Button-Item {
+  display: flex;
+  flex-direction: column;
+  align-items: center;   /* 아이콘과 텍스트를 세로로 정렬 */
+  margin: 0 5px; /* 버튼 간 간격 조정 */
+}
+
+.ButtonImage {
+  width: 30px;
+  height: 30px;
+  cursor: pointer;
+}
+
+.Span {
+  font-size: 10px;
+  color: white; /* 텍스트 색상 흰색 */
+  text-align: center;
+  margin-top: 5px;
+}
+
+.ButtonImage:hover {
+  opacity: 0.7;
+}
+
+/* 모바일 반응형 */
+@media (max-width: 768px) {
+  .Graph_Container {
+    width: 100vw;
+    height: 100vh;
+    margin: 0;
+    padding: 0; /* 모바일에서 패딩 제거 */
+    border-radius: 0;
+    box-shadow: none;
+  }
+
+  .recharts-responsive-container{
+    margin-right:7vw;
+  }
+
+  .GraphTitle {
+    font-size: clamp(30px, 10vw, 50px); /* 반응형 폰트 크기 */
+    top: 5vh; /* 상단에서 5vh로 조정 */
+  }
+
+  .Central_Menu {
+    margin-top: 15vh; /* GraphTitle 아래 여백 조정 */
+  }
+
+  .Inbodyscore_div {
+    margin-top: 0; /* 모바일에서 여백 제거 */
+  }
+
+  .inbodyscore {
+    font-size: clamp(30px, 8vw, 50px); /* 반응형 폰트 크기 */
+    margin: 0 auto; /* 중앙 정렬 */
+  }
+
+  .inbodyscore_text {
+    font-size: clamp(12px, 4vw, 16px); /* 반응형 폰트 크기 */
+    margin: 5px 0;
+  }
+
+  .graphtext {
+    font-size: clamp(12px, 4vw, 16px); /* 반응형 폰트 크기 */
+    margin: 0;
+  }
+
+  .icon {
+    width: clamp(50px, 8vw, 40px); /* 아이콘 크기 확대 */
+    height: clamp(50px, 8vw, 40px);
+    margin-top: 5px;
+    padding: 3px; /* 패딩 조정 */
+  }
+
+  .text {
+    font-size: clamp(12px, 4vw, 14px); /* 반응형 텍스트 크기 */
+    margin-bottom: 20px; /* 모바일에서 간격 조정 */
+  }
+
+  .ButtonImage {
+    width: clamp(30px, 8vw, 40px); /* 버튼 아이콘 크기 확대 */
+    height: clamp(30px, 8vw, 40px);
+  }
+
+  .Span {
+    font-size: clamp(10px, 3vw, 12px); /* 텍스트 크기 확대 */
+  }
+
+  .container {
+    gap: 10px; /* 모바일에서 간격 줄임 */
+    margin: 0 auto; /* 중앙 정렬 */
+    flex-direction: row; /* 가로 배치 유지 */
+    flex-wrap: wrap; /* 화면이 좁으면 줄 바꿈 */
+    justify-content: center; /* 아이템 중앙 정렬 */
+  }
+
+  .Button-Container {
+    bottom: 0; /* 하단 고정 */
+    padding: 10px 0; /* 더 넉넉한 패딩 */
+  }
+
+  .recharts-responsive-container {
+    height: 30vh; /* 모바일에서 그래프 높이 조정 */
+  }
+}
