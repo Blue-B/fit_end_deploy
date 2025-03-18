@@ -15,7 +15,7 @@ export default function Graph() {
 
   const navigateMain = () => {navigate("/main");};
   const navigateToRecordBody = () => {navigate("/recordbody");};
-  const navigateFood=() => {navigate("/FoodList");};
+  const navigateFood=() => {navigate("/MealTimingselect");};
   const navigateRank = () => {navigate("/rank");};
   const handleLogout = async () => {
     await fetch(`http://${config.SERVER_URL}/login/logout`, {

@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from "react";
 import { useNavigate, useLocation } from "react-router-dom";
 import config from "../config";
-import "../Style/FoodList.css";
+import styles from "../Style/FoodList.module.css";
 
 export default function FoodSearchR() {
   const [data, setData] = useState(null);
@@ -108,49 +108,33 @@ export default function FoodSearchR() {
   };
 
   return (
-    <div className="Main_Container">
-      <img src="/image/black.png" alt="Background" className="MainImage" />
-        <a className="maintitle">FitEnd</a>
-        <div className="food-container">
-      {/* <h2>날짜 선택</h2>
-      <input
-        type="date"
-        value={selectedDate}
-        onChange={(e) => setSelectedDate(e.target.value)}
-      />
+    <div className={styles.Main_Container}>
+      <img src="/image/black.png" alt="Background" className={styles.MainImage} />
+      <a className={styles.maintitle}>FitEnd</a>
+      <div className={styles.food_container}>
+        <h2>날짜: {date}</h2>
+        <h2>식사 유형: {mealType === "breakfast" ? "아침" : mealType === "lunch" ? "점심" : "저녁"}</h2>
+        <h2>음식 검색</h2>
+        <input
+          type="text"
+          value={foodNm}
+          onChange={(e) => setFoodNm(e.target.value)}
+          placeholder="Enter food name"
+        />
+        <button onClick={fetchData}>Search</button>
+        {data ? (
+          <div>
+            {data.map((item, index) => (
+              <button key={index} onClick={() => handleButtonClick(item)}>
+                {item.foodNm} {item.mfrNm}
+              </button>
+            ))}
+          </div>
+        ) : (
+          <p>Loading...</p>
+        )}
 
-      <h2>메모 입력</h2>
-      <input
-        type="text"
-        placeholder="메모 입력"
-        value={dietMemo}
-        onChange={(e) => setDietMemo(e.target.value)}
-      /> */}
-<h2>날짜: {date}</h2>
-<h2>식사 유형: {mealType === "breakfast" ? "아침" : mealType === "lunch" ? "점심" : "저녁"}</h2>
-      <h2>음식 검색</h2>
-      <input
-        type="text"
-        value={foodNm}
-        onChange={(e) => setFoodNm(e.target.value)}
-        placeholder="Enter food name"
-      />
-      <button onClick={fetchData}>Search</button>
-      {data ? (
-        <div>
-          {data.map((item, index) => (
-            <button key={index} onClick={() => handleButtonClick(item)}>
-              {item.foodNm} {item.mfrNm}
-            </button>
-          ))}
-        </div>
-      ) : (
-        <p>Loading...</p>
-      )}
-
-  
-
-  <div className="button-container">
+        <div className={styles.button_container}>
           {[
             { img: "HOME.png", alt: "Main", action: navigateMain, label: "Main" },
             { img: "PAPAR.png", alt: "Paper", action: navigateToRecordBody, label: "Paper" },
@@ -158,13 +142,13 @@ export default function FoodSearchR() {
             { img: "Vector8.png", alt: "Food", action: navigateFood, label: "Food" },
             { img: "PEOPLE.png", alt: "Logout", action: handleLogout, label: "Logout" },
           ].map(({ img, alt, action, label }, idx) => (
-            <div key={idx} className="button-item">
-              <img src={`/image/${img}`} alt={alt} className="buttonimage" onClick={action} />
-              <span className="span">{label}</span>
+            <div key={idx} className={styles.button_item}>
+              <img src={`/image/${img}`} alt={alt} className={styles.buttonimage} onClick={action} />
+              <span className={styles.span}>{label}</span>
             </div>
           ))}
         </div>
-  </div>
-</div>
+      </div>
+    </div>
   );
 }
