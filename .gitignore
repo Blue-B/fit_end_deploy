@@ -6,12 +6,6 @@ yarn-error.log*
 # No mac stuff
 .DS_Store
 
-# No vscode stuff
-.vscode
-
-# No bundled stuff in git
-dist
-lib
 
 # No rollup stuff
 .rts2_cache*
@@ -53,9 +47,7 @@ jspm_packages/
 
 # Typescript v1 declaration files
 typings/
-
-#WebStorm
-.idea/
+ 
 
 # Optional npm cache directory
 .npm
@@ -108,14 +100,8 @@ derby.log
 .gradletasknamecache
 /build
 buildSrc/build
-/spring-*/build
-/framework-*/build
-/integration-tests/build
-/src/asciidoc/build
-spring-test/test-output/
-
-# Maven artifacts
-/target/
+ 
+ 
 
 # Eclipse artifacts, including WTP generated manifests
 bin
@@ -135,8 +121,7 @@ out
 test-output
 atlassian-ide-plugin.xml
 
-# VS Code
-.vscode/
+ 
 
 cached-antora-playbook.yml
 
