@@ -108,83 +108,87 @@ export default function RankPage() {
   const rankings = selectedGender === "male" ? maleRank : femaleRank;
 
   return (
-    <div className={styles["Main_Container"]}>
+
+      <div className={styles["Main_Container"]}>
         <a className={styles["RecordBodyTitle"]}>FitEnd</a>
         <img src="/image/backgroundImage/Rectangle23.png" alt="Background" className={styles["MainImage"]} />
-        <img src="/image/backgroundImage/별배경.png" alt="star" className={styles["backgroundstar"]} />
-        <img src="/image/backgroundImage/프레임4.png" alt="Frame4" className={styles["backgroundFrame4"]} />
-        <img src="/image/backgroundImage/프레임3.png" alt="Frame3" className={styles["backgroundFrame3"]} />
-        <img src="/image/backgroundImage/프레임5.png" alt="Frame5" className={styles["backgroundFrame5"]} />
         <a className={styles["RecordBodyMainTitle"]}>Ranking</a>
-
-        {/* 🚀 **1~3등의 랜덤 프로필 이미지** */}
+    
+        {/* 🚀 1~3등 프로필 */}
         <div className={styles["top-rank-container"]}>
-          {[1, 0, 2].map((rank, index) => (
-            <div key={rank} className={`${styles["rank-profile"]} ${styles[`rank-${rank + 1}`]}`}>
-              <img 
-                src={(rankings[rank] && rankings[rank].profileImage) ? rankings[rank].profileImage : randomImages[index] || "/image/default_img.jpg"} 
-                className={styles["profile-image"]}
-                alt={`Rank ${rank + 1}`}
-              />
-              <p className={styles["rank-name"]}>{rankings[rank] ? rankings[rank].userid : "Unknown"}</p>
-            </div>
-          ))}
+          {[1, 0, 2].map((rank, index) => {
+            const bgColor = rank === 1 ? "#5AE7F8" : rank === 0 ? "#FCF600" : "#F4A2F6";
+    
+            return (
+              <div key={rank} className={`${styles["rank-profile"]} ${styles[`rank-${rank + 1}`]}`}>
+                <div className={`${styles["big-circle"]}`} style={{ backgroundColor: bgColor }}></div>
+                <img 
+                  src={(rankings[rank] && rankings[rank].profileImage) ? rankings[rank].profileImage : randomImages[index] || "/image/default_img.jpg"} 
+                  className={styles["profile-image"]}
+                  alt={`Rank ${rank + 1}`}
+                />
+                <div className={`${styles["small-circle"]}`} style={{ backgroundColor: bgColor }}></div>
+                <p className={styles["rank-name"]}>{rankings[rank] ? rankings[rank].userid : "Unknown"}</p>
+              </div>
+            );
+          })}
         </div>
-
-        {/* 🚀 **남자/여자 랭킹 버튼** */}
+    
+        {/* 🚀 남자/여자 랭킹 선택 버튼 */}
         <div className={styles["gender-buttons"]}>
           <button 
             className={`${styles["gender-btn"]} ${selectedGender === "male" ? styles["active"] : ""}`} 
             onClick={() => handleGenderSelection("male")}
           >
-          <a className={styles["genderbtn_title"]}>MAN</a>
+            <a className={styles["genderbtn_title"]}>MAN</a>
           </button>
           <button 
             className={`${styles["gender-btn"]} ${selectedGender === "female" ? styles["active"] : ""}`} 
             onClick={() => handleGenderSelection("female")}
           >
-          <a className={styles["genderbtn_title"]}>WOMAN</a>
+            <a className={styles["genderbtn_title"]}>WOMAN</a>
           </button>
         </div>
-
-        {/* 🚀 **랭킹 리스트** */}
+    
+        {/* 🚀 랭킹 리스트 */}
         <div className={styles["ranking_list"]} style={{ maxHeight: "400px", overflowY: "auto" }}>
           {rankings.slice(0, 10).map((user, index) => (
             <div key={index} className={styles["ranking-item"]}>
               <span className={styles["rank-position"]}>{index + 1}.</span> &nbsp;&nbsp;
               <span className={styles["user-id"]}>{user.userid}</span>
-              <span className={styles["user-score"]}>POINT: {user.score}</span>
+              <span className={styles["user-score"]}>POINT: {user.inbodyScore}</span>
             </div>
           ))}
         </div>
-
-        {/* 🚀 **하단 네비게이션 버튼** */}
+    
+        {/* 🚀 하단 네비게이션 버튼 */}
         <div className={styles["Button-Container"]}>
           <div className={styles["Button-Item"]}>
             <img src="/image/HOME.png" alt="Main" className={styles["ButtonImage"]} onClick={navigateMain} />
             <span className={styles["Span"]}>Main</span>         
           </div>
-
+    
           <div className={styles["Button-Item"]}>
             <img src="/image/PAPAR.png" alt="Paper" className={styles["ButtonImage"]} onClick={navigateToRecordBody} />
             <span className={styles["Span"]}>Paper</span>
           </div>
-
+    
           <div className={styles["Button-Item"]}>
             <img src="/image/Vector7.png" alt="Graph" className={styles["ButtonImage"]} onClick={navigateGraph} />
             <span className={styles["Span"]}>Graph</span>
           </div>
-
+    
           <div className={styles["Button-Item"]}>
             <img src="/image/Vector8.png" alt="Food" className={styles["ButtonImage"]} onClick={navigateFood}/>
             <span className={styles["Span"]}>Food</span>
           </div>
-
+    
           <div className={styles["Button-Item"]}>
             <img src="/image/PEOPLE.png" alt="Logout" className={styles["ButtonImage"]} onClick={handleLogout} />
             <span className={styles["Span"]}>Logout</span>
           </div>
         </div>
-    </div>
-  );
+      </div>
+    );
+    
 }

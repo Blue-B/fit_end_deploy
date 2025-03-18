@@ -89,7 +89,7 @@ body, html {
 
 .gender-buttons {
   position: absolute;
-  top: 50%; /* 랭킹 리스트와 겹치지 않도록 고정 */
+  top: 48%; /* 랭킹 리스트와 겹치지 않도록 고정 */
   left: 50%;
   transform: translateX(-50%);
   display: flex;
@@ -119,15 +119,15 @@ body, html {
 /* 1~3등 프로필 */
 .top-rank-container {
   display: flex;
-  justify-content: center;
+  justify-content: space-between;
   align-items: flex-end;
-  gap: clamp(20px, 10vw, 50px); /* 반응형 간격 */
+  gap: clamp(10px, 10vw, 50px);
   position: absolute;
-  top: clamp(100px, 20vh, 150px); /* 반응형 위치 */
+  top: min(100px, 18vh); /* 기본적으로 너무 내려가지 않도록 조정 */
   left: 50%;
   transform: translateX(-50%);
-  width: 100%;
-  height: clamp(80px, 20vh, 120px); /* 반응형 높이 */
+  width: 80%; 
+  height: clamp(80px, 20vh, 120px);
   z-index: 2;
 }
 
@@ -135,26 +135,22 @@ body, html {
   display: flex;
   flex-direction: column;
   align-items: center;
+  position: relative;
 }
 
 .rank-1 {
-  transform: scale(1.7);
+  transform: scale(1.6);
   order: 2;
-  margin-bottom: clamp(10px, 3vh, 20px); /* 반응형 여백 */
+  margin-bottom: clamp(5px, 2vh, 15px); /* 여백 감소 */
 }
 
-.rank-2,
-.rank-3 {
+.rank-2, .rank-3 {
   transform: scale(1.2);
 }
 
-.rank-2 {
-  order: 1;
-}
+.rank-2 { order: 1; }
+.rank-3 { order: 3; }
 
-.rank-3 {
-  order: 3;
-}
 
 /* 랭킹 리스트 */
 .ranking_list {
@@ -187,10 +183,12 @@ body, html {
 }
 
 .profile-image {
-  width: clamp(40px, 15vw, 60px); /* 반응형 크기 */
-  height: clamp(40px, 15vw, 60px); /* 반응형 크기 */
+  width: 60px;/* 반응형 크기 */
+  height:60px;
   border-radius: 50%;
   background: gray;
+  position: relative;
+  z-index: 1; /* 작은 원보다 뒤 */
 }
 
 .rank-position {
@@ -243,6 +241,78 @@ body, html {
     box-shadow: none;
   }
 
+}
+
+/* 🏆 1~3등 랭킹 컨테이너 */
+.top-rank-container {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-end;
+  gap: clamp(10px, 10vw, 50px);
+  position: absolute;
+  top: min(300px, 20vh); /* 기본적으로 너무 내려가지 않도록 조정 */
+  left: 50%;
+  transform: translateX(-50%);
+  width: 80%; 
+  height: clamp(80px, 20vh, 120px);
+  z-index: 2;
+}
+
+/* 🏅 1~3등 반응형 조정 */
+.rank-1 {
+  transform: scale(1.6);
+  order: 2;
+  margin-bottom: clamp(5px, 2vh, 15px); /* 여백 감소 */
+}
+
+.rank-2, .rank-3 {
+  transform: scale(1.2);
+}
+
+.rank-2 { order: 1; }
+.rank-3 { order: 3; }
+
+/* 큰 원 */
+.big-circle {
+  position: absolute;
+  width: 65px;
+  height:65px;
+  border-radius: 50%;
+  top: 28%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  z-index: -1;
+}
+
+/* 작은 원 */
+.small-circle {
+  position: absolute;
+  width: 13px;
+  height:13px;
+  border-radius: 50%;
+  top: 55%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  z-index: 2;
+}
+
+
+
+
+
+
+
+/* 모바일 반응형 */
+@media (max-width: 768px) {
+  .Main_Container {
+    width: 100vw;
+    height: 100vh;
+    margin: 0;
+    padding: 0; /* 모바일에서 패딩 제거 */
+    border-radius: 0;
+    box-shadow: none;
+  }
+
   .RecordBodyTitle {
     top: 5vh;
   }
@@ -251,39 +321,7 @@ body, html {
     top: 40vh;
   }
 
-  .backgroundstar {
-    top: -17vh; /* 모바일에서 배경 위치 조정 */
-    left: -23vw;
-    width: 150vw; /* 모바일에서 배경 크기 확장 */
-  }
 
-  .backgroundFrame4,
-  .backgroundFrame3,
-  .backgroundFrame5 {
-    top: -10vh; /* 모바일에서 프레임 위치 조정 */
-    width: 120vw; /* 모바일에서 프레임 크기 확장 */
-  }
-
-  .backgroundFrame4 {
-    top: -2.3vh;
-    left: 5.3vw;
-    width: 90vw;
-  }
-
-  .backgroundFrame3 {
-    top:-22vw;
-    right: 0.4vw;
-  }
-
-  .backgroundFrame5 {
-    top:-22vw;
-    left:1.9vw;
-  }
-
-  .top-rank-container {
-    top: 15vh;
-    height: 20vh;
-  }
 
   .ranking_list {
     top: 55vh;
