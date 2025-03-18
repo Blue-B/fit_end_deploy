@@ -2,6 +2,7 @@ import React, { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import config from "../config";
 import "../Style/TodoCalender.css";
+import fetchHelper from "../utils/fetchHelper";
 
 export default function TodoCalender() {
   const navigate = useNavigate();
@@ -18,14 +19,25 @@ export default function TodoCalender() {
 
   // 로그아웃 처리
   const handleLogout = async () => {
-    await fetch(`http://${config.SERVER_URL}/login/logout`, {
+    const response = await fetchHelper(`http://${config.SERVER_URL}/login/logout`, {
       method: "POST",
       credentials: "include",
     });
 
-    sessionStorage.removeItem("useridRef");
-    navigate("/login");
+    if (response === "network-error") {
+      navigate("/error/500");
+    } else if (response === 404) {
+      navigate("/error/404");
+    } else if (response === 500) {
+      navigate("/error/500");
+    } else if (response === 503) {
+      navigate("/error/503");
+    } else {
+      sessionStorage.removeItem("useridRef");
+      navigate("/login");
+    }
   };
+
 
   // 오늘 날짜를 YYYY-MM-DD 형식으로 변환하는 함수
   const getTodayDate = () => {
@@ -36,35 +48,60 @@ export default function TodoCalender() {
   useEffect(() => {
     setSelectedDate(getTodayDate()); // 오늘 날짜로 기본 설정
 
-    fetch(`http://${config.SERVER_URL}/login/validate`, {
+    fetchHelper(`http://${config.SERVER_URL}/login/validate`, {
       method: "GET",
       credentials: "include",
     })
       .then((response) => {
+        if (response === "network-error") {
+          navigate("/error/500");
+          throw new Error("Network error");
+        } else if (response === 404) {
+          navigate("/error/404");
+          throw new Error("404 Not Found");
+        } else if (response === 500) {
+          navigate("/error/500");
+          throw new Error("500 Internal Server Error");
+        } else if (response === 503) {
+          navigate("/error/503");
+          throw new Error("503 Service Unavailable");
+        }
+
         if (!response.ok) throw new Error("Unauthorized");
         return response.json();
       })
       .then((data) => {
-        console.log("로그인 상태 확인 성공:", data);
         setUserid(data.userid);
 
-        return fetch(`http://${config.SERVER_URL}/food/diet-records/${data.userid}`, {
+        return fetchHelper(`http://${config.SERVER_URL}/food/diet-records/${data.userid}`, {
           method: "GET",
           credentials: "include",
           headers: { "Content-Type": "application/json" },
         });
       })
       .then((response) => {
-        if (!response.ok) throw new Error("서버 응답 실패");
+        if (response === "network-error") {
+          navigate("/error/500");
+          throw new Error("Network error");
+        } else if (response === 404) {
+          navigate("/error/404");
+          throw new Error("404 Not Found");
+        } else if (response === 500) {
+          navigate("/error/500");
+          throw new Error("500 Internal Server Error");
+        } else if (response === 503) {
+          navigate("/error/503");
+          throw new Error("503 Service Unavailable");
+        }
+
         return response.json();
       })
       .then((data) => {
-        console.log("받은 데이터:", data);
         setUserData(data);
 
         // 데이터가 있는 날짜만 저장 & 최신순 정렬
         const dates = [...new Set(data.map((record) => new Date(record.timestamp).toISOString().split("T")[0]))]
-        .sort((a, b) => new Date(b) - new Date(a)); // 최신순 정렬
+          .sort((a, b) => new Date(b) - new Date(a)); // 최신순 정렬
 
         setAvailableDates(dates);
         setSelectedDate(dates[0] || getTodayDate()); // 최신 날짜 선택 (없으면 오늘 날짜)
@@ -74,7 +111,7 @@ export default function TodoCalender() {
         navigate("/login");
       });
   }, [navigate]);
-
+  
   // 선택한 날짜의 데이터 필터링
   const filteredData = userData.filter((record) => {
     const recordDate = new Date(record.timestamp).toISOString().split("T")[0]; // YYYY-MM-DD 형식 변환

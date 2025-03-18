@@ -4,6 +4,7 @@ import config from "../config";
 import { useSpring, animated } from "react-spring";
 import { useSwipeable } from "react-swipeable";
 import styles from "../Style/main.module.css";
+import fetchHelper from "../utils/fetchHelper";
 
 export default function Main() {
   const navigate = useNavigate();
@@ -23,12 +24,23 @@ export default function Main() {
   const navigateGraph = () => navigate("/Graph");
 
   const handleLogout = async () => {
-    await fetch(`http://${config.SERVER_URL}/login/logout`, {
+    const response = await fetchHelper(`http://${config.SERVER_URL}/login/logout`, {
       method: "POST",
       credentials: "include",
     });
-    sessionStorage.removeItem("userid");
-    navigate("/login");
+
+    if (response === "network-error") {
+      navigate("/error/500");
+    } else if (response === 404) {
+      navigate("/error/404");
+    } else if (response === 500) {
+      navigate("/error/500");
+    } else if (response === 503) {
+      navigate("/error/503");
+    } else {
+      sessionStorage.removeItem("userid");
+      navigate("/login");
+    }
   };
 
   useEffect(() => {
@@ -59,11 +71,25 @@ export default function Main() {
   ];
 
   useEffect(() => {
-    fetch(`http://${config.SERVER_URL}/login/validate`, {
+    fetchHelper(`http://${config.SERVER_URL}/login/validate`, {
       method: "GET",
       credentials: "include",
     })
       .then((response) => {
+        if (response === "network-error") {
+          navigate("/error/500");
+          throw new Error("Network error");
+        } else if (response === 404) {
+          navigate("/error/404");
+          throw new Error("404 Not Found");
+        } else if (response === 500) {
+          navigate("/error/500");
+          throw new Error("500 Internal Server Error");
+        } else if (response === 503) {
+          navigate("/error/503");
+          throw new Error("503 Service Unavailable");
+        }
+
         if (!response.ok) throw new Error("Unauthorized");
         return response.json();
       })
@@ -71,23 +97,35 @@ export default function Main() {
         console.log("로그인 상태 확인 성공:", data);
         useridRef.current = data.userid;
         sessionStorage.setItem("userid", data.userid);
-        return fetch(`http://${config.SERVER_URL}/userinfobody/recentuserbody/${data.userid}`, {
+        return fetchHelper(`http://${config.SERVER_URL}/userinfobody/recentuserbody/${data.userid}`, {
           method: "GET",
           credentials: "include",
           headers: { "Content-Type": "application/json" },
         });
       })
-      .then((response) => response.json())
+      .then((response) => {
+        if (response === "network-error") {
+          navigate("/error/500");
+          throw new Error("Network error");
+        } else if (response === 404) {
+          navigate("/error/404");
+          throw new Error("404 Not Found");
+        } else if (response === 500) {
+          navigate("/error/500");
+          throw new Error("500 Internal Server Error");
+        } else if (response === 503) {
+          navigate("/error/503");
+          throw new Error("503 Service Unavailable");
+        }
+
+        return response.json();
+      })
       .then((bodyData) => {
         console.log("신체 기록 응답 데이터:", bodyData);
         setbodyrecord(bodyData);
         setLoading(false);
       })
-      .catch(() => {
-        console.warn("인증 실패. 로그인 페이지로 이동");
-        sessionStorage.removeItem("userid");
-        navigate("/login");
-      });
+     
   }, [navigate]);
 
   return (

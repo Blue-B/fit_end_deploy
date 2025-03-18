@@ -2,6 +2,7 @@ import React, { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom"; // 페이지 이동을 위한 훅
 import config from "../config";
 import styles from "../Style/register.module.css";
+import fetchHelper from "../utils/fetchHelper";
 
 export default function Register() {
   const navigate = useNavigate(); // 페이지이동 userNavigate()
@@ -73,25 +74,33 @@ export default function Register() {
     event.preventDefault();
 
     try {
-      const response = await fetch(
-        `http://${config.SERVER_URL}/userinfo/register`,
-        {
-          method: "POST",
-          headers: {
-            "Content-Type": "application/json",
-          },
-          body: JSON.stringify(userInfo),
-        }
-      );
+      const response = await fetchHelper(`http://${config.SERVER_URL}/userinfo/register`, {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify(userInfo),
+      });
 
-      if (response.ok) {
+      if (response === "network-error") {
+        navigate("/error/500");
+        throw new Error("Network error");
+      } else if (response === 404) {
+        navigate("/error/404");
+        throw new Error("404 Not Found");
+      } else if (response === 500) {
+        navigate("/error/500");
+        throw new Error("500 Internal Server Error");
+      } else if (response === 503) {
+        navigate("/error/503");
+        throw new Error("503 Service Unavailable");
+      } else if (response.ok) {
         alert("회원가입이 성공적으로 완료되었습니다.");
         console.log("User registered successfully");
-        navigate("/login"); // 가입 성공시 login페이지 이동
+        navigate("/login");
       } else {
         alert("회원가입 실패! 입력한 정보를 다시 확인해주세요.");
         console.error("Failed to register user");
-        // 실패 시 추가적인 로직
       }
     } catch (error) {
       alert("관리자에게 문의해주세요.");

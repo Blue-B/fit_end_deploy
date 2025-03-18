@@ -2,6 +2,7 @@ import React, { useState, useEffect } from "react";
 import config from "../config";
 import { useNavigate } from "react-router-dom";
 import styles from "../Style/rankpage.module.css";
+import fetchHelper from "../utils/fetchHelper";
 
 export default function RankPage() {
   const [maleRank, setMaleRank] = useState([]);
@@ -55,13 +56,23 @@ export default function RankPage() {
 
   // 로그아웃 처리
   const handleLogout = async () => {
-    await fetch(`http://${config.SERVER_URL}/login/logout`, {
+    const response = await fetchHelper(`http://${config.SERVER_URL}/login/logout`, {
       method: "POST",
       credentials: "include",
     });
 
-    sessionStorage.removeItem("userid");
-    navigate("/login");
+    if (response === "network-error") {
+      navigate("/error/500");
+    } else if (response === 404) {
+      navigate("/error/404");
+    } else if (response === 500) {
+      navigate("/error/500");
+    } else if (response === 503) {
+      navigate("/error/503");
+    } else {
+      sessionStorage.removeItem("userid");
+      navigate("/login");
+    }
   };
 
   // 성별 선택 핸들러 (랜덤 이미지 3개 선택)
@@ -80,27 +91,62 @@ export default function RankPage() {
   }, [selectedGender]); // selectedGender가 변경될 때마다 실행
 
   useEffect(() => {
-    // 남성 랭킹 조회
-    fetch(`http://${config.SERVER_URL}/userinfobody/scorerankmale`, {
-      method: "GET",
-      credentials: "include",
-      headers: { "Content-Type": "application/json" },
-    })
-      .then((res) => res.ok ? res.json() : Promise.reject("서버 응답 오류 (남성 랭킹)"))
-      .then((data) => setMaleRank(data))
-      .catch((error) => setError(error));
+    const fetchRankingData = async () => {
+      try {
+        const maleResponse = await fetchHelper(`http://${config.SERVER_URL}/userinfobody/scorerankmale`, {
+          method: "GET",
+          credentials: "include",
+          headers: { "Content-Type": "application/json" },
+        });
 
-    // 여성 랭킹 조회
-    fetch(`http://${config.SERVER_URL}/userinfobody/scorerankfemale`, {
-      method: "GET",
-      credentials: "include",
-      headers: { "Content-Type": "application/json" },
-    })
-      .then((res) => res.ok ? res.json() : Promise.reject("서버 응답 오류 (여성 랭킹)"))
-      .then((data) => setFemaleRank(data))
-      .catch((error) => setError(error))
-      .finally(() => setLoading(false));
-  }, []);
+        if (maleResponse === "network-error") {
+          navigate("/error/500");
+          throw new Error("Network error");
+        } else if (maleResponse === 404) {
+          navigate("/error/404");
+          throw new Error("404 Not Found");
+        } else if (maleResponse === 500) {
+          navigate("/error/500");
+          throw new Error("500 Internal Server Error");
+        } else if (maleResponse === 503) {
+          navigate("/error/503");
+          throw new Error("503 Service Unavailable");
+        }
+
+        const maleData = await maleResponse.json();
+        setMaleRank(maleData);
+
+        const femaleResponse = await fetchHelper(`http://${config.SERVER_URL}/userinfobody/scorerankfemale`, {
+          method: "GET",
+          credentials: "include",
+          headers: { "Content-Type": "application/json" },
+        });
+
+        if (femaleResponse === "network-error") {
+          navigate("/error/500");
+          throw new Error("Network error");
+        } else if (femaleResponse === 404) {
+          navigate("/error/404");
+          throw new Error("404 Not Found");
+        } else if (femaleResponse === 500) {
+          navigate("/error/500");
+          throw new Error("500 Internal Server Error");
+        } else if (femaleResponse === 503) {
+          navigate("/error/503");
+          throw new Error("503 Service Unavailable");
+        }
+
+        const femaleData = await femaleResponse.json();
+        setFemaleRank(femaleData);
+        setLoading(false);
+      } catch (error) {
+        console.error("데이터 가져오기 실패:", error);
+        navigate("/error/500");
+      }
+    };
+
+    fetchRankingData();
+  }, [navigate]);
 
   if (loading) return <p>📡 데이터를 불러오는 중입니다...</p>;
   if (error) return <p>⚠️ 오류 발생: {error}</p>;

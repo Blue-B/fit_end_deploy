@@ -13,6 +13,11 @@ import TodoCalender from "./Component/TodoCalender";
 import ClickThis from "./Component/ClickThis";
 import FoodSearchR from "./Component/FoodSearchR";
 import MealTimingselect from "./Component/MealTimingselect";
+ 
+import Error404 from "./Component/Error404";
+import Error500 from "./Component/Error500";
+import Error503 from "./Component/Error503.js";
+
 const App = () => {
   return (
     <Router>
@@ -29,6 +34,10 @@ const App = () => {
         <Route path="/graph" element={<Graph />} />
         <Route path="/FoodSearchR" element={<FoodSearchR />} />
         <Route path="/MealTimingselect" element={<MealTimingselect/>}/>
+        <Route path="/error/404" element={<Error404 />} />
+        <Route path="/error/500" element={<Error500 />} />
+        <Route path="/error/503" element={<Error503 />} />
+        <Route path="*" element={<Error404 />} />
       </Routes>
     </Router>
   );

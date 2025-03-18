@@ -1,0 +1,107 @@
+.notfound-container {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  min-height: 100vh;
+  background-color: #1A1A1A;
+  padding: 0 20px;
+  color: white;
+}
+
+.phone-frame {
+  position: relative;
+  width: 320px;
+  max-width: 100%;
+  background-color: #1A1A1A;
+  padding: 20px;
+  border-radius: 40px;
+  border: 8px solid #2A2A2A;
+}
+
+.phone-notch {
+  position: absolute;
+  top: 0;
+  left: 50%;
+  width: 40px;
+  height: 6px;
+  background-color: #2A2A2A;
+  border-radius: 10px;
+  transform: translateX(-50%);
+}
+
+.content-container {
+  position: relative;
+  display: flex;
+  justify-content: center;
+  flex-direction: column;
+  align-items: center;
+  height: 500px;
+}
+
+.icon-left-top, .icon-right-middle, .icon-left-middle, .icon-right-bottom, .icon-right-center, .icon-left-center, .icon-left-bottom {
+  position: absolute;
+  color: #facc15;
+}
+
+.icon-left-top {
+  top: 25%;
+  left: 15%;
+}
+
+.icon-right-middle {
+  top: 40%;
+  right: 20%;
+}
+
+.icon-left-middle {
+  top: 15%;
+  left: 25%;
+}
+
+.icon-right-bottom {
+  bottom: 30%;
+  right: 25%;
+}
+
+.icon-right-center {
+  top: 25%;
+  right: 30%;
+  stroke: #facc15;
+}
+
+.icon-left-center {
+  top: 45%;
+  left: 40%;
+  stroke: #facc15;
+}
+
+.icon-left-bottom {
+  bottom: 35%;
+  left: 30%;
+  stroke: #facc15;
+}
+
+.main-text {
+  font-size: 80px;
+  font-weight: bold;
+  margin-bottom: 20px;
+}
+
+.sub-text {
+  font-size: 20px;
+  font-weight: 500;
+  color: #facc15;
+  margin-bottom: 10px;
+}
+
+.page-not-found {
+  font-size: 18px;
+  font-weight: 400;
+  margin-bottom: 20px;
+}
+
+.error-message {
+  font-size: 12px;
+  color: #d1d5db;
+  text-align: center;
+}

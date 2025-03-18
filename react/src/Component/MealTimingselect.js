@@ -3,6 +3,7 @@ import { useNavigate } from 'react-router-dom';
 import 'react-calendar/dist/Calendar.css';
 import "../Style/MealTimingselect.css"
 import config from "../config";
+import fetchHelper from "../utils/fetchHelper";
 
 export default function MealTimingselect() {
     const navigate = useNavigate();
@@ -25,58 +26,92 @@ export default function MealTimingselect() {
     const navigateFoodSearchR = () => {navigate("/FoodSearchR")}
     const navigateCalender = () => {navigate("/todo")}
     const handleLogout = async () => {
-        await fetch(`http://${config.SERVER_URL}/login/logout`, {
-            method: "POST",
-            credentials: "include",
-        });
-        sessionStorage.removeItem("useridRef");
-        navigate("/login");
-    };
+      const response = await fetchHelper(`http://${config.SERVER_URL}/login/logout`, {
+          method: "POST",
+          credentials: "include",
+      });
+
+      if (response === "network-error") {
+          navigate("/error/500");
+      } else if (response === 404) {
+          navigate("/error/404");
+      } else if (response === 500) {
+          navigate("/error/500");
+      } else if (response === 503) {
+          navigate("/error/503");
+      } else {
+          sessionStorage.removeItem("userid");
+          navigate("/login");
+      }
+  };
 
     const navigateFoodsearchR = (meal) => {
         navigate("/FoodSearchR", { state: { date: selectedDateFormatted, mealType: meal } });
       };
       
-    useEffect(() => {
-        fetch(`http://${config.SERVER_URL}/login/validate`, {
+      useEffect(() => {
+        fetchHelper(`http://${config.SERVER_URL}/login/validate`, {
             method: "GET",
             credentials: "include",
         })
-            .then((response) => {
-                if (!response.ok) throw new Error("Unauthorized");
-                return response.json();
-            })
-            .then((data) => {
-                console.log("로그인 상태 확인 성공:", data);
-                setUserid(data.userid);
-                return fetch(`http://${config.SERVER_URL}/food/diet-records/${data.userid}`, {
-                    method: "GET",
-                    credentials: "include",
-                    headers: { "Content-Type": "application/json" },
-                  });
-                })
-                .then((response) => {
-                  if (!response.ok) throw new Error("서버 응답 실패");
-                  return response.json();
-                })
-                .then((data) => {
-                //   console.log("📊 받은 데이터:", data);
-                  setMealData(data);
-          
-                  // 기록이 있는 날짜 목록 만들기 (중복 제거 후 최신순 정렬)
-                  const dates = [...new Set(data.map((record) => formatDate(new Date(record.timestamp))))].sort(
-                    (a, b) => new Date(b) - new Date(a)
-                  );
-          
-                //   console.log("🗓️ 기록이 있는 날짜:", dates);
-                  setAvailableDates(dates);
-                  setSelectedDate(dates[0] ? new Date(dates[0]) : new Date()); // 최신 날짜 선택 (없으면 오늘)
-                })
-                .catch((error) => {
-                  console.warn("⚠️ 인증 실패 또는 데이터 불러오기 실패:", error);
-                  navigate("/login");
-                });
-            }, [navigate]);
+        .then((response) => {
+            if (response === "network-error") {
+                navigate("/error/500");
+                throw new Error("Network error");
+            } else if (response === 404) {
+                navigate("/error/404");
+                throw new Error("404 Not Found");
+            } else if (response === 500) {
+                navigate("/error/500");
+                throw new Error("500 Internal Server Error");
+            } else if (response === 503) {
+                navigate("/error/503");
+                throw new Error("503 Service Unavailable");
+            }
+
+            if (!response.ok) throw new Error("Unauthorized");
+            return response.json();
+        })
+        .then((data) => {
+            console.log("로그인 상태 확인 성공:", data);
+            setUserid(data.userid);
+
+            return fetchHelper(`http://${config.SERVER_URL}/food/diet-records/${data.userid}`, {
+                method: "GET",
+                credentials: "include",
+                headers: { "Content-Type": "application/json" },
+            });
+        })
+        .then((response) => {
+            if (response === "network-error") {
+                navigate("/error/500");
+                throw new Error("Network error");
+            } else if (response === 404) {
+                navigate("/error/404");
+                throw new Error("404 Not Found");
+            } else if (response === 500) {
+                navigate("/error/500");
+                throw new Error("500 Internal Server Error");
+            } else if (response === 503) {
+                navigate("/error/503");
+                throw new Error("503 Service Unavailable");
+            }
+
+            return response.json();
+        })
+        .then((data) => {
+            setMealData(data);
+            const dates = [...new Set(data.map((record) => formatDate(new Date(record.timestamp))))].sort(
+                (a, b) => new Date(b) - new Date(a)
+            );
+            setAvailableDates(dates);
+            setSelectedDate(dates[0] ? new Date(dates[0]) : new Date());
+        })
+        .catch((error) => {
+            console.warn("⚠️ 인증 실패 또는 데이터 불러오기 실패:", error);
+            navigate("/login");
+        });
+    }, [navigate]);
 
       // 선택한 날짜의 데이터 필터링
   

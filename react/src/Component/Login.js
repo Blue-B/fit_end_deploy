@@ -2,6 +2,7 @@ import React, { useState,useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import config from "../config";
 import styles from "../Style/login.module.css";
+import fetchHelper from "../utils/fetchHelper";
 
 export default function Login() {
   const [userid, setUserId] = useState("");
@@ -20,7 +21,7 @@ export default function Login() {
     };
 
     try {
-      const response = await fetch(
+      const response = await fetchHelper(
         `http://${config.SERVER_URL}/login/login`,
         {
           method: "POST",
@@ -31,22 +32,24 @@ export default function Login() {
           body: JSON.stringify(userInfo),
         }
       );
-
-      if (response.ok) {
+      if (response === "network-error") {
+        navigate("/error/500"); // 서버 오류
+      } else if (response === "404") {
+        navigate("/error/404"); // 404 페이지
+      } else if (response === "500") {
+        navigate("/error/500"); // 500 페이지
+      } else if (response === "503") {
+        navigate("/error/503"); // 503 페이지
+      } else if (response.ok) {
         const data = await response.json();
-
         console.log("Login successful");
-
         alert("로그인 성공!");
-        sessionStorage.setItem("userid", data.userid); 
-        navigate("/main"); //메인 페이지 이동
-      } else if (response.status === 403) {
-        // 로그인 차단 (5회 이상 실패)
-        const data = await response.json();
-        setErrorMessage(data.error || "여러 번 시도하셨습니다. 잠시 후 다시 시도하세요.");
+        sessionStorage.setItem("userid", data.userid);
+        navigate("/main"); // 로그인 성공 후 메인 페이지로 이동
       } else {
         setErrorMessage("로그인 실패! 아이디 또는 비밀번호를 확인하세요.");
       }
+
     } catch (error) {
       setErrorMessage("서버 오류 발생! 관리자에게 문의하세요.");
       console.error("Error:", error);

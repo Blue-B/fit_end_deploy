@@ -2,6 +2,7 @@ import React, { useState, useEffect, useRef } from "react";
 import { useNavigate } from "react-router-dom";
 import config from "../config";
 import styles from "../Style/graph.module.css";
+import fetchHelper from "../utils/fetchHelper";
 import { LineChart, Line, XAxis, YAxis, CartesianGrid, Tooltip, Legend, ResponsiveContainer } from 'recharts';
 
 export default function Graph() {
@@ -18,18 +19,45 @@ export default function Graph() {
   const navigateFood=() => {navigate("/MealTimingselect");};
   const navigateRank = () => {navigate("/rank");};
   const handleLogout = async () => {
-    await fetch(`http://${config.SERVER_URL}/login/logout`, {
+    const response = await fetchHelper(`http://${config.SERVER_URL}/login/logout`, {
       method: "POST",
       credentials: "include",
     });
+
+    if (response === "network-error") {
+      navigate("/error/500");
+    } else if (response === 404) {
+      navigate("/error/404");
+    } else if (response === 500) {
+      navigate("/error/500");
+    } else if (response === 503) {
+      navigate("/error/503");
+    } else {
+      sessionStorage.removeItem("userid");
+      navigate("/login");
+    }
   };
 
   useEffect(() => {
-    fetch(`http://${config.SERVER_URL}/login/validate`, {
+    fetchHelper(`http://${config.SERVER_URL}/login/validate`, {
       method: "GET",
-      credentials: "include", // 쿠키 자동 포함
+      credentials: "include",
     })
       .then((response) => {
+        if (response === "network-error") {
+          navigate("/error/500");
+          throw new Error("Network error");
+        } else if (response === 404) {
+          navigate("/error/404");
+          throw new Error("404 Not Found");
+        } else if (response === 500) {
+          navigate("/error/500");
+          throw new Error("500 Internal Server Error");
+        } else if (response === 503) {
+          navigate("/error/503");
+          throw new Error("503 Service Unavailable");
+        }
+
         if (!response.ok) throw new Error("Unauthorized");
         return response.json();
       })
@@ -39,18 +67,39 @@ export default function Graph() {
         sessionStorage.setItem("userid", data.userid);
 
         // 사용자 신체 기록 가져오기
-        return fetch(`http://${config.SERVER_URL}/userinfobody/recentuserbody/${data.userid}`, {
+        return fetchHelper(`http://${config.SERVER_URL}/userinfobody/recentuserbody/${data.userid}`, {
           method: "GET",
           credentials: "include",
           headers: { "Content-Type": "application/json" },
         });
       })
-      .then((response) => response.json())
+      .then((response) => {
+        if (response === "network-error") {
+          navigate("/error/500");
+          throw new Error("Network error");
+        } else if (response === 404) {
+          navigate("/error/404");
+          throw new Error("404 Not Found");
+        } else if (response === 500) {
+          navigate("/error/500");
+          throw new Error("500 Internal Server Error");
+        } else if (response === 503) {
+          navigate("/error/503");
+          throw new Error("503 Service Unavailable");
+        }
+
+        return response.json();
+      })
       .then((bodyData) => {
         console.log("신체 기록 응답 데이터:", bodyData);
         setBodyRecod(bodyData);
         setLoading(false);
       })
+      .catch(() => {
+        console.warn("인증 실패. 로그인 페이지로 이동");
+        sessionStorage.removeItem("userid");
+        navigate("/login");
+      });
   }, [navigate]);
 
   // 누적된 BMI 데이터와 오늘의 BMI 데이터를 업데이트

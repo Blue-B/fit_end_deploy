@@ -2,6 +2,7 @@ import React, { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import config from "../config";
 import styles from "../Style/recordbody.module.css";
+import fetchHelper from "../utils/fetchHelper";
 
 export default function RecordBody() {
   const navigate = useNavigate();
@@ -20,30 +21,53 @@ export default function RecordBody() {
 
   // 로그아웃 처리
   const handleLogout = async () => {
-    await fetch(`http://${config.SERVER_URL}/login/logout`, {
+    const response = await fetchHelper(`http://${config.SERVER_URL}/login/logout`, {
       method: "POST",
       credentials: "include",
     });
 
-    sessionStorage.removeItem("userid");
-    navigate("/login");
+    if (response === "network-error") {
+      navigate("/error/500");
+    } else if (response === 404) {
+      navigate("/error/404");
+    } else if (response === 500) {
+      navigate("/error/500");
+    } else if (response === 503) {
+      navigate("/error/503");
+    } else {
+      sessionStorage.removeItem("userid");
+      navigate("/login");
+    }
   };
 
 
   useEffect(() => {
-    // 현재 로그인된 유저 확인
-    fetch(`http://${config.SERVER_URL}/login/validate`, {
+    fetchHelper(`http://${config.SERVER_URL}/login/validate`, {
       method: "GET",
       credentials: "include",
     })
       .then((response) => {
+        if (response === "network-error") {
+          navigate("/error/500");
+          throw new Error("Network error");
+        } else if (response === 404) {
+          navigate("/error/404");
+          throw new Error("404 Not Found");
+        } else if (response === 500) {
+          navigate("/error/500");
+          throw new Error("500 Internal Server Error");
+        } else if (response === 503) {
+          navigate("/error/503");
+          throw new Error("503 Service Unavailable");
+        }
+
         if (!response.ok) throw new Error("Unauthorized");
         return response.json();
       })
       .then((data) => {
         console.log("로그인 확인 성공:", data);
         setUserid(data.userid);
-        setSelectedSex(data.sex.toString());  // API 성별 가져오기
+        setSelectedSex(data.sex.toString()); // API에서 성별 가져오기
       })
       .catch(() => {
         console.warn("인증 실패. 로그인 페이지로 이동");
@@ -65,17 +89,25 @@ export default function RecordBody() {
     console.log("📌 보내는 데이터:", userBodyInfo);
 
     try {
-      const response = await fetch(`http://${config.SERVER_URL}/userinfobody/recorduserbody`, {
+      const response = await fetchHelper(`http://${config.SERVER_URL}/userinfobody/recorduserbody`, {
         method: "POST",
-        credentials: "include", // 쿠키 포함 요청
+        credentials: "include",
         headers: {
           "Content-Type": "application/json",
         },
         body: JSON.stringify(userBodyInfo),
       });
 
-      if (response.ok) {
-        alert("신체 정보가 저장되었습니다! 메인 페이지로 이동합니다.");
+      if (response === "network-error") {
+        navigate("/error/500");
+      } else if (response === 404) {
+        navigate("/error/404");
+      } else if (response === 500) {
+        navigate("/error/500");
+      } else if (response === 503) {
+        navigate("/error/503");
+      } else if (response.ok) {
+        alert("신체 정보가 저장되었습니다! 그래프 페이지로 이동합니다.");
         navigate("/graph");
       } else {
         alert("신체 정보 저장 실패! 다시 시도해주세요.");
