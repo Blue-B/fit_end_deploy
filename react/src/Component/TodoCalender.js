@@ -12,8 +12,8 @@ export default function TodoCalender() {
 
   // 네비게이션 함수
   const navigateMain = () => navigate("/main");
-  const navigateToRecordBody = () => navigate("/recordbody");
-  const navigateFood = () => navigate("/MealTimingselect");
+  const navigateToRecordBody = () => navigate("/recodbody");
+  const navigateFood = () => navigate("/FoodSearchR");
   const navigateGraph = () => navigate("/Graph");
 
   // 로그아웃 처리
@@ -124,10 +124,11 @@ export default function TodoCalender() {
         ) : (
           <p>📭 해당 날짜에 기록이 없습니다.</p>
         )}
+              {/* 🔍 음식 검색 버튼 */}
+      <button onClick={() => navigate("/food")}>음식 검색</button>
       </div>
 
-      {/* 🔍 음식 검색 버튼 */}
-      <button onClick={() => navigate("/food")}>음식 검색</button>
+
       
       {/* 하단 네비게이션 버튼 */}
       <div className="button-container">
