@@ -1,6 +1,6 @@
 import { useState, useEffect } from "react";
 import { useNavigate } from 'react-router-dom';
-import "../Style/MealCalender.css";
+import styles from "../Style/MealCalender.module.css"
 import config from "../config";
 // import { FaCalendarAlt } from "react-icons/fa";
 
@@ -18,9 +18,18 @@ const MealCalendar = ({ mealData = [] }) => { // ✅ mealData 기본값을 빈 �
   
   const navigateMain = () => {navigate("/main");};
 
-  const navigateToRecordBody = () => {navigate("/recodbody");};
+  const navigateToRecordBody = () => {navigate("/recordbody");};
 
-  const navigateFood= () => {navigate("/MealTimingselect");};
+  const navigateFood = () => {
+    if (selectedDate) {
+      // 선택한 날짜의 full date 생성
+      const fullDate = new Date(year, month - 1, selectedDate);
+      navigate("/MealTimingselect", { state: { selectedDate: fullDate } });
+    } else {
+      alert("날짜를 선택하세요!");
+    }
+  };
+  
 
   const navigateGraph = () => {navigate("/Graph")};
 
@@ -101,40 +110,46 @@ const MealCalendar = ({ mealData = [] }) => { // ✅ mealData 기본값을 빈 �
   
 
   return (
-    <div className="MealCalender_Container">
-      <img src="/image/black.png" alt="Background" className="MealCalender_image" />
-      <a className="MealCalender_title">FitEnd</a>
-      <div className="meal-calendar">
-       {/* 📌 월 변경 헤더 */}
-      <div className="calendar-header">
-        <button onClick={() => changeMonth(-1)}>⟪</button>
-        <h2>{monthNames[month - 1]} {year}</h2> {/* ✅ 숫자 → 영어로 변경 */}
-        <button onClick={() => changeMonth(1)}>⟫</button>
-      </div>
+    <div className={styles.MealCalender_Container}>
+      <img
+        src="/image/black.png"
+        alt="Background"
+        className={styles.MealCalender_image}
+      />
+      <a className={styles.MealCalender_title}>FitEnd</a>
+      <div className={styles["meal-calendar"]}>
+        <div className={styles["calendar-header"]}>
+          <button onClick={() => changeMonth(-1)}>⟪</button>
+          <h2>
+            {monthNames[month - 1]} {year}
+          </h2>
+          <button onClick={() => changeMonth(1)}>⟫</button>
+        </div>
 
-
-        {/* 요일 헤더 */}
-        <div className="weekdays">
+        <div className={styles.weekdays}>
           {["Mon", "Tue", "Wed", "Thu", "Fri", "Sat", "Sun"].map((day) => (
             <div key={day}>{day}</div>
           ))}
         </div>
 
-        {/* 날짜 표시 */}
-        <div className="calendar-days">
+        <div className={styles["calendar-days"]}>
           {Array.from({ length: daysInMonth + startDay }).map((_, index) => {
             const day = index - startDay + 1;
-            const dateKey = `${year}-${month.toString().padStart(2, "0")}-${day.toString().padStart(2, "0")}`;
+            const dateKey = `${year}-${month.toString().padStart(2, "0")}-${day
+              .toString()
+              .padStart(2, "0")}`;
             const isSelected = selectedDate === day;
             const hasData = mealRecords[dateKey];
 
             return index < startDay ? (
-              <div key={`empty-${index}`} className="empty-day"></div> // 빈 칸 추가
+              <div key={`empty-${index}`} className={styles["empty-day"]}></div>
             ) : (
               <button
                 key={day}
                 onClick={() => handleDateClick(day)}
-                className={`calendar-day ${isSelected ? "selected" : ""} ${hasData ? "has-data" : ""}`}
+                className={`${styles["calendar-day"]} ${
+                  isSelected ? styles.selected : ""
+                } ${hasData ? styles["has-data"] : ""}`}
               >
                 {day}
               </button>
@@ -142,56 +157,96 @@ const MealCalendar = ({ mealData = [] }) => { // ✅ mealData 기본값을 빈 �
           })}
         </div>
 
-        {/* 선택된 날짜 정보 */}
         {selectedDate && (
-          <div className="selected-date-container">
-            <p className="selected-date-text">{year}년 {month}월 {selectedDate}일 선택됨</p>
+          <div className={styles["selected-date-container"]}>
+            <p className={styles["selected-date-text"]}>
+              {year}년 {month}월 {selectedDate}일 선택됨
+            </p>
 
-            {/* 🔥 해당 날짜에 데이터가 존재하는지 확인 */}
-            {mealRecords[`${year}-${month.toString().padStart(2, "0")}-${selectedDate.toString().padStart(2, "0")}`] ? (
+            {mealRecords[
+              `${year}-${month.toString().padStart(2, "0")}-${selectedDate
+                .toString()
+                .padStart(2, "0")}`
+            ] ? (
               <>
-                <p className="meal-data-text">
-                  {mealRecords[`${year}-${month.toString().padStart(2, "0")}-${selectedDate.toString().padStart(2, "0")}`].meal.join(", ")}
+                <p className={styles["meal-data-text"]}>
+                  {
+                    mealRecords[
+                      `${year}-${month.toString().padStart(2, "0")}-${selectedDate
+                        .toString()
+                        .padStart(2, "0")}`
+                    ].meal.join(", ")
+                  }
                 </p>
-                <p className="calorie-data-text">
-                  🔥 {mealRecords[`${year}-${month.toString().padStart(2, "0")}-${selectedDate.toString().padStart(2, "0")}`].calories} kcal
+                <p className={styles["calorie-data-text"]}>
+                  🔥{" "}
+                  {
+                    mealRecords[
+                      `${year}-${month.toString().padStart(2, "0")}-${selectedDate
+                        .toString()
+                        .padStart(2, "0")}`
+                    ].calories
+                  }{" "}
+                  kcal
                 </p>
               </>
             ) : (
-              <p className="no-record-text">기록 없음</p>
+              <p className={styles["no-record-text"]}>기록 없음</p>
             )}
-            <button className="eat" onClick={navigateFood}>
-              <span className="eat_yellow_button">What'd you have today?</span>
+            <button className={styles.eat} onClick={navigateFood}>
+              <span className={styles.eat_yellow_button}>
+                Going to record food Click!
+              </span>
             </button>
           </div>
         )}
-
       </div>
-      {/* 기타 UI 구성 */}
-      <div className="Button-Container">
-        <div className="Button-Item">
-          <img src="/image/HOME.png" alt="Main" className="ButtonImage" onClick={navigateMain} />
-          <span className="Span">Main</span>
-        </div>
 
-        <div className="Button-Item">
-          <img src="/image/PAPAR.png" alt="Paper" className="ButtonImage" onClick={navigateToRecordBody} />
-          <span className="Span">Paper</span>
+      <div className={styles["Button-Container"]}>
+        <div className={styles["Button-Item"]}>
+          <img
+            src="/image/HOME.png"
+            alt="Main"
+            className={styles.ButtonImage}
+            onClick={navigateMain}
+          />
+          <span className={styles.Span}>Main</span>
         </div>
-
-        <div className="Button-Item">
-          <img src="/image/Vector7.png" alt="rank" className="ButtonImage" onClick={navigateGraph} />
-          <span className="Span">Graph</span>
+        <div className={styles["Button-Item"]}>
+          <img
+            src="/image/PAPAR.png"
+            alt="Paper"
+            className={styles.ButtonImage}
+            onClick={navigateToRecordBody}
+          />
+          <span className={styles.Span}>Paper</span>
         </div>
-
-        <div className="Button-Item">
-          <img src="/image/Vector8.png" alt="Food" className="ButtonImage" onClick={thisPage}/>
-          <span className="Span">Food</span>
+        <div className={styles["Button-Item"]}>
+          <img
+            src="/image/Vector7.png"
+            alt="rank"
+            className={styles.ButtonImage}
+            onClick={navigateGraph}
+          />
+          <span className={styles.Span}>Graph</span>
         </div>
-
-        <div className="Button-Item">
-          <img src="/image/PEOPLE.png" alt="Logout" className="ButtonImage" onClick={handleLogout} />
-          <span className="Span">Logout</span>
+        <div className={styles["Button-Item"]}>
+          <img
+            src="/image/Vector8.png"
+            alt="Food"
+            className={styles.ButtonImage}
+            onClick={thisPage}
+          />
+          <span className={styles.Span}>Food</span>
+        </div>
+        <div className={styles["Button-Item"]}>
+          <img
+            src="/image/PEOPLE.png"
+            alt="Logout"
+            className={styles.ButtonImage}
+            onClick={handleLogout}
+          />
+          <span className={styles.Span}>Logout</span>
         </div>
       </div>
     </div>

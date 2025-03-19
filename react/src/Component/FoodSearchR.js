@@ -3,20 +3,29 @@ import { useNavigate, useLocation } from "react-router-dom";
 import config from "../config";
 import styles from "../Style/FoodList.module.css";
 
+const formatDate = (date) => {
+  const validDate = date instanceof Date ? date : new Date(date);
+  return new Date(validDate.getTime() - validDate.getTimezoneOffset() * 60000)
+    .toISOString()
+    .split("T")[0];
+};
+
 export default function FoodSearchR() {
+  const location = useLocation();
+  const { selectedDate, mealType } = location.state || {};
+  const formattedSelectedDate = selectedDate || formatDate(new Date());
+  const formattedMealType = mealType || "dinner";
+
   const [data, setData] = useState(null);
   const [foodNm, setFoodNm] = useState("");
-  const [selectedDate, setSelectedDate] = useState(""); // 날짜 선택
+
   // const [dietMemo, setDietMemo] = useState(""); // 메모 입력
   const [userid, setUserid] = useState("");
   const navigate = useNavigate();
-  const location = useLocation();
-  const { date = new Date().toISOString().split("T")[0], mealType = "dinner" } = location.state || {}; 
-
-
+ 
   const navigateMain = () => {navigate("/main");};
   const navigateToRecordBody = () => {navigate("/recordbody");};
-  const navigateFood=() => {navigate("/MealTimingselect");};
+  const navigateFood=() => {navigate("/Calender");};
   const navigateGraph = () => {navigate("/Graph")};
 
   // 로그아웃 처리
@@ -86,8 +95,8 @@ export default function FoodSearchR() {
     const foodData = {
       ...item,
       userid,
-      timestamp: date || new Date().toISOString(), // 선택한 날짜가 없으면 현재 날짜
-      dietMemo: mealType || "기록 없음", // 메모 기본값 설정
+      timestamp: selectedDate || new Date().toISOString(),
+      dietMemo: mealType || "기록 없음",
     };
 
     console.log("전송할 데이터:", foodData); // 전송 전에 확인
@@ -113,8 +122,8 @@ export default function FoodSearchR() {
       <img src="/image/black.png" alt="Background" className={styles.MainImage} />
       <a className={styles.maintitle}>FitEnd</a>
       <div className={styles.food_container}>
-        <h2>날짜: {date}</h2>
-        <h2>식사 유형: {mealType === "breakfast" ? "아침" : mealType === "lunch" ? "점심" : "저녁"}</h2>
+        <h2>날짜: {formattedSelectedDate}</h2>
+        <h2>식사 유형: {formattedMealType === "moning" ? "아침" : formattedMealType === "lunch" ? "점심" : formattedMealType === "dinner" ? "저녁" : "디저트"}</h2>
         <h2>음식 검색</h2>
         <input
           type="text"

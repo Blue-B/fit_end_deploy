@@ -44,7 +44,7 @@ body, html {
   font-family: 'ThinkBold', sans-serif;
   font-size: 50px;
   position: absolute;
-  top: 10px;
+  top: 30px;
   left: 50%;
   transform: translateX(-50%);
   z-index: 1;
@@ -52,7 +52,6 @@ body, html {
   padding-bottom: 5px;
   border-bottom: 4px solid #C9F439;
   font-weight: bold;
-  margin-bottom: 20px;
 }
 
 .food_container {
@@ -66,18 +65,20 @@ body, html {
 
 .button_container {
   display: flex;
-  justify-content: space-between;
-  padding: 20px;
+  justify-content: space-evenly;
+  width: 100%;
   position: absolute;
-  width: 90%;
-  left: 0px;
   bottom: 0;
+  left: 0;
+  padding: 10px 0;
+  background: rgba(0, 0, 0, 0.8);
 }
 
 .button_item {
   display: flex;
   flex-direction: column;
   align-items: center;
+  margin: 0 5px;
 }
 
 .buttonimage {
@@ -109,8 +110,18 @@ body, html {
   }
 
   .maintitle {
-    font-size: clamp(30px, 10vw, 50px);
-    top: 5vh;
+    font-family: 'ThinkBold', sans-serif;
+    font-size: 50px;
+    position: absolute;  /* 고정된 위치로 설정 */
+    top: 30px;       /* 상단에서 100px 아래로 위치 */
+    left: 50%;        /* 화면 가로 중앙에 배치 */
+    transform: translateX(-50%); /* 정확한 중앙 정렬을 위한 오프셋 */
+    z-index: 1;         
+    color: white;
+    padding-bottom: 5px;  /* 텍스트와 밑줄 사이 간격 설정 */
+    border-bottom: 4px solid #C9F439; /* 밑줄 색상과 두께 설정 */
+    font-weight: bold;
+    margin-bottom: 20px;
   }
 
   .anime_container {
@@ -131,4 +142,3 @@ body, html {
     font-size: clamp(8px, 2.5vw, 10px);
   }
 }
-

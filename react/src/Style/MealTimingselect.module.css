@@ -37,16 +37,17 @@ body, html {
 
 .MealTimeingslelect_title{
   font-family: 'ThinkBold', sans-serif;
-  font-size: 32px;
+  font-size: 50px;
   position: absolute;  /* 고정된 위치로 설정 */
   top: 30px;       /* 상단에서 100px 아래로 위치 */
   left: 50%;        /* 화면 가로 중앙에 배치 */
   transform: translateX(-50%); /* 정확한 중앙 정렬을 위한 오프셋 */
-  z-index: 2;         
+  z-index: 1;         
   color: white;
   padding-bottom: 5px;  /* 텍스트와 밑줄 사이 간격 설정 */
   border-bottom: 4px solid #C9F439; /* 밑줄 색상과 두께 설정 */
   font-weight: bold;
+  margin-bottom: 20px;
 }
 
 .FoodTitle{
@@ -345,18 +346,19 @@ body, html {
   display: flex;
   justify-content: space-evenly;
   width: 100%;
-  position:absolute;
-  top:93%;
-  left:50%;
-  transform: translate(-50%,-50%);
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  padding: 10px 0;
+  background: rgba(0, 0, 0, 0.8);
   z-index:4;
 }
 
 .Button-Item{
-  display:flex;
+  display: flex;
   flex-direction: column;
   align-items: center;
-  margin:10px;
+  margin: 0 5px;
 }
 
 .ButtonImage{

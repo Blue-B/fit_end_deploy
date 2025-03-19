@@ -17,18 +17,18 @@ body, html {
 }
 
 .Graph_Container {
-  position: relative; /* Parents needs relative positioning */
-  width: 360px;
-  height: 700px;
+  position: relative;
+  width: 360px; /* PC에서 모바일 사이즈 */
+  height: 700px; /* PC에서 모바일 사이즈 */
   display: flex;
   flex-direction: column;
   align-items: center;
-  justify-content: flex-start; /* 콘텐츠를 상단부터 시작 */
+  justify-content: space-between;
   text-align: center;
   margin: 0 auto; /* PC에서 중앙 정렬 */
   background: transparent;
   padding: 20px;
-  overflow: visible; /* Allow scrollable content */
+  overflow: hidden;
   border-radius: 10px;
   box-shadow: 0 0 10px rgba(0, 0, 0, 0.2); /* PC에서 모바일 느낌 */
 }
@@ -323,7 +323,7 @@ body, html {
     height: 100vh;
     margin: 0;
     padding: 0; /* 모바일에서 패딩 제거 */
-    border-radius: 0;
+    border-radius: 10px;
     box-shadow: none;
   }
 
