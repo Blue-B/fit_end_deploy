@@ -13,6 +13,7 @@ export default function FoodSearchR() {
   const location = useLocation();
   const { date = new Date().toISOString().split("T")[0], mealType = "dinner" } = location.state || {}; 
 
+
   const navigateMain = () => {navigate("/main");};
   const navigateToRecordBody = () => {navigate("/recordbody");};
   const navigateFood=() => {navigate("/MealTimingselect");};
