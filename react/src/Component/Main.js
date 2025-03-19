@@ -5,13 +5,16 @@ import { useSpring, animated } from "react-spring";
 import { useSwipeable } from "react-swipeable";
 import styles from "../Style/main.module.css";
 import fetchHelper from "../utils/fetchHelper";
+import ApiHandler from "./ApiHandlerPage";
 
 export default function Main() {
   const navigate = useNavigate();
   const [currentIndex, setCurrentIndex] = useState(0);
   const [bodyrecord, setbodyrecord] = useState([]);
   const [loading, setLoading] = useState(true);
+  const [jwtString, setJwtString] = useState("");
   const useridRef = useRef(sessionStorage.getItem("userid"));
+  
 
   const swipeHandlers = useSwipeable({
     onSwipedLeft: () => goToNext(),
@@ -69,6 +72,29 @@ export default function Main() {
     "/image/advertisement_gym.png",
     "/image/advertisement_main.png",
   ];
+
+    // JWT 생성 함수
+    const generationJwt = async () => {
+      try {
+        const response = await fetch(`http://${config.SERVER_URL}/userinfo/generation`, {
+          method: "POST",
+          credentials: "include",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify({ userid: useridRef.current }),
+        });
+        if (!response.ok) {
+          throw new Error("Network response was not ok");
+        }
+        const token = await response.text();
+        setJwtString(token);
+        console.log("Received JWT:", token);
+      } catch (error) {
+        console.error("JWT 생성 중 에러 발생:", error);
+      }
+    };
+
 
   useEffect(() => {
     fetchHelper(`http://${config.SERVER_URL}/login/validate`, {
