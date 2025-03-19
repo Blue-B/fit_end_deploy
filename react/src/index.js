@@ -13,6 +13,7 @@ import TodoCalender from "./Component/TodoCalender";
 import ClickThis from "./Component/ClickThis";
 import FoodSearchR from "./Component/FoodSearchR";
 import MealTimingselect from "./Component/MealTimingselect";
+import MealCalender from "./Component/MealCalender.js";
  
 import Error404 from "./Component/Error404";
 import Error500 from "./Component/Error500";
@@ -34,6 +35,7 @@ const App = () => {
         <Route path="/graph" element={<Graph />} />
         <Route path="/FoodSearchR" element={<FoodSearchR />} />
         <Route path="/MealTimingselect" element={<MealTimingselect/>}/>
+        <Route path="/Calender" element={<MealCalender/>}/>
         <Route path="/error/404" element={<Error404 />} />
         <Route path="/error/500" element={<Error500 />} />
         <Route path="/error/503" element={<Error503 />} />

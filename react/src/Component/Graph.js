@@ -16,7 +16,7 @@ export default function Graph() {
 
   const navigateMain = () => {navigate("/main");};
   const navigateToRecordBody = () => {navigate("/recordbody");};
-  const navigateFood=() => {navigate("/MealTimingselect");};
+  const navigateCalender=() => {navigate("/Calender");};
   const navigateRank = () => {navigate("/rank");};
   const handleLogout = async () => {
     const response = await fetchHelper(`http://${config.SERVER_URL}/login/logout`, {
@@ -193,7 +193,7 @@ export default function Graph() {
                   <span className={styles["Span"]}>Rank</span>
                 </div>
                 <div className={styles["Button-Item"]}>
-                  <img src="/image/Vector8.png" alt="Food" className={styles["ButtonImage"]} onClick={navigateFood} />
+                  <img src="/image/Vector8.png" alt="Food" className={styles["ButtonImage"]} onClick={navigateCalender} />
                   <span className={styles["Span"]}>Food</span>
                 </div>
                 <div className={styles["Button-Item"]}>

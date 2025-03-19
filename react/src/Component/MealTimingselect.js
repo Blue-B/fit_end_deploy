@@ -21,10 +21,11 @@ export default function MealTimingselect() {
     };
     const navigateMain = () => {navigate("/main");};
     const navigateToRecordBody = () => {navigate("/recordbody");};
-    const navigateFood=() => {navigate("/MealTimingselect");};
+    const navigateFood=() => {navigate("/Calender");};
     const navigateGraph = () => {navigate("/Graph")};
     const navigateFoodSearchR = () => {navigate("/FoodSearchR")}
     const navigateCalender = () => {navigate("/todo")}
+
     const handleLogout = async () => {
       const response = await fetchHelper(`http://${config.SERVER_URL}/login/logout`, {
           method: "POST",

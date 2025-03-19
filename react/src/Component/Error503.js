@@ -5,7 +5,6 @@ import '../Style/Error404.css'; // CSS 파일
 const NotFound = () => {
   return (
     <div className="notfound-container">
-      <div className="phone-frame">
         <div className="phone-notch"></div>
         <div className="content-container">
 
@@ -19,7 +18,6 @@ const NotFound = () => {
           <p className="page-not-found">Under Maintenance</p>
           <p className="error-message">We are preparing to serve you better.<br />We'll back shortly.</p>
         </div>
-      </div>
     </div>
   );
 };
