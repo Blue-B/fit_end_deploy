@@ -11,7 +11,7 @@ export default function FoodSearchR() {
   const [userid, setUserid] = useState("");
   const navigate = useNavigate();
   const location = useLocation();
-  const { date, mealType } = location.state || {}; // state에서 date와 mealType 가져오기
+  const { date = new Date().toISOString().split("T")[0], mealType = "dinner" } = location.state || {}; 
 
   const navigateMain = () => {navigate("/main");};
   const navigateToRecordBody = () => {navigate("/recordbody");};

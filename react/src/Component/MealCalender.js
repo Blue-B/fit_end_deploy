@@ -20,7 +20,16 @@ const MealCalendar = ({ mealData = [] }) => { // ✅ mealData 기본값을 빈 �
 
   const navigateToRecordBody = () => {navigate("/recodbody");};
 
-  const navigateFood= () => {navigate("/MealTimingselect");};
+  const navigateFood= () => {
+    if (!selectedDate) {
+      alert("캘린더에서 날짜를 선택하세요!");
+      return;
+    }
+  
+    const formattedDate = `${year}-${month.toString().padStart(2, "0")}-${selectedDate.toString().padStart(2, "0")}`;
+    navigate("/MealTimingselect", { state: { date: formattedDate } });
+
+  };
 
   const navigateGraph = () => {navigate("/Graph")};
 
