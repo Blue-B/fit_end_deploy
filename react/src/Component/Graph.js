@@ -102,6 +102,15 @@ export default function Graph() {
       });
   }, [navigate]);
 
+  useEffect(() => {
+    if (bodyrecod.length === 0) {
+      const timer = setTimeout(() => {
+        navigateToRecordBody();
+      }, 5000);
+      return () => clearTimeout(timer);
+    }
+  }, [bodyrecod, navigateToRecordBody]);
+
   // 누적된 BMI 데이터와 오늘의 BMI 데이터를 업데이트
   useEffect(() => {
     if (bodyrecod.length > 0) {
@@ -123,8 +132,7 @@ export default function Graph() {
   if (bodyrecod.length === 0 || bodyrecod[0] == null) {
     return (
       <div>
-        <p>⚠️ 신체 기록이 없습니다. 데이터를 입력해주세요.</p>
-        <button onClick={navigateToRecordBody}>기록 추가하기</button>
+        <p>⚠️ 신체 기록이 없습니다! 곧 등록페이지로 이동됩니다.</p>
       </div>
     );
   }

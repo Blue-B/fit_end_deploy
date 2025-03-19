@@ -20,7 +20,7 @@ export default function MealTimingselect() {
         .split("T")[0];
     };
     const navigateMain = () => {navigate("/main");};
-    const navigateToRecordBody = () => {navigate("/recodbody");};
+    const navigateToRecordBody = () => {navigate("/recordbody");};
     const navigateFood=() => {navigate("/MealTimingselect");};
     const navigateGraph = () => {navigate("/Graph")};
     const navigateFoodSearchR = () => {navigate("/FoodSearchR")}
