@@ -18,37 +18,40 @@ export default function FoodSearchR() {
 
   const [data, setData] = useState(null);
   const [foodNm, setFoodNm] = useState("");
-
-  // const [dietMemo, setDietMemo] = useState(""); // 메모 입력
   const [userid, setUserid] = useState("");
   const navigate = useNavigate();
- 
-  const navigateMain = () => {navigate("/main");};
-  const navigateToRecordBody = () => {navigate("/recordbody");};
-  const navigateFood=() => {navigate("/Calender");};
-  const navigateGraph = () => {navigate("/Graph")};
+
+  const navigateMain = () => { navigate("/main"); };
+  const navigateToRecordBody = () => { navigate("/recordbody"); };
+  const navigateFood = () => { navigate("/Calender"); };
+  const navigateGraph = () => { navigate("/Graph"); };
 
   // 로그아웃 처리
   const handleLogout = async () => {
-    await fetch(`http://${config.SERVER_URL}/login/logout`, {
-      method: "POST",
-      credentials: "include",
-    });
+    try {
+      const response = await fetch(`http://${config.SERVER_URL}/login/logout`, {
+        method: "POST",
+        credentials: "include",
+      });
 
-    sessionStorage.removeItem("useridRef");
-    navigate("/login");
-  };
-
-  // 쿠키에 JWT 존재 여부만 확인함
-  const getCookie = (name) => {
-    const cookieArr = document.cookie.split("; ");
-    for (let i = 0; i < cookieArr.length; i++) {
-      const cookiePair = cookieArr[i].split("=");
-      if (cookiePair[0] === name) {
-        return cookiePair[1];
+      if (!response.ok) {
+        if (response.status === 404) {
+          navigate("/error/404");
+        } else if (response.status === 500) {
+          navigate("/error/500");
+        } else if (response.status === 503) {
+          navigate("/error/503");
+        } else {
+          throw new Error("로그아웃 실패");
+        }
+      } else {
+        sessionStorage.removeItem("useridRef");
+        navigate("/login");
       }
+    } catch (error) {
+      console.error("로그아웃 중 오류 발생:", error);
+      navigate("/error/500");
     }
-    return null;
   };
 
   useEffect(() => {
@@ -58,7 +61,17 @@ export default function FoodSearchR() {
       credentials: "include",
     })
       .then((response) => {
-        if (!response.ok) throw new Error("Unauthorized");
+        if (!response.ok) {
+          if (response.status === 404) {
+            navigate("/error/404");
+          } else if (response.status === 500) {
+            navigate("/error/500");
+          } else if (response.status === 503) {
+            navigate("/error/503");
+          } else {
+            throw new Error("Unauthorized");
+          }
+        }
         return response.json();
       })
       .then((data) => {
@@ -76,22 +89,34 @@ export default function FoodSearchR() {
     if (foodNm) {
       fetch(`http://${config.SERVER_URL}/food/foodname/${foodNm}`, {
         method: "GET",
-        credentials: "include", // 쿠키 포함 요청
+        credentials: "include",
       })
-        .then((response) => response.json())
+        .then((response) => {
+          if (!response.ok) {
+            if (response.status === 404) {
+              navigate("/error/404");
+            } else if (response.status === 500) {
+              navigate("/error/500");
+            } else if (response.status === 503) {
+              navigate("/error/503");
+            } else {
+              throw new Error("음식 검색 실패");
+            }
+          }
+          return response.json();
+        })
         .then((data) => setData(data))
-        .catch((error) => console.error("Error fetching data:", error));
+        .catch((error) => {
+          console.error("Error fetching data:", error);
+          alert("음식 검색 중 오류가 발생했습니다.");
+        });
+    } else {
+      alert("음식 이름을 입력하세요.");
     }
-    console.log(data);
   };
 
   // 음식 선택 후 저장 API 호출
   const handleButtonClick = (item) => {
-    // if (!selectedDate) {
-    //   alert("날짜를 선택하세요!");
-    //   return;
-    // }
-
     const foodData = {
       ...item,
       userid,
@@ -103,18 +128,34 @@ export default function FoodSearchR() {
 
     fetch(`http://${config.SERVER_URL}/food/saveFoodRecord`, {
       method: "POST",
-      credentials: "include", // 쿠키 포함 요청
+      credentials: "include",
       headers: {
         "Content-Type": "application/json",
       },
       body: JSON.stringify(foodData),
     })
-      .then((response) => response.text()) // JSON 형식이 아니라면 .json() 대신 .text() 사용
+      .then((response) => {
+        if (!response.ok) {
+          if (response.status === 404) {
+            navigate("/error/404");
+          } else if (response.status === 500) {
+            navigate("/error/500");
+          } else if (response.status === 503) {
+            navigate("/error/503");
+          } else {
+            throw new Error("음식 기록 저장 실패");
+          }
+        }
+        return response.text();
+      })
       .then((data) => {
         console.log("서버 응답:", data);
         alert(data); // 성공 메시지 출력
       })
-      .catch((error) => console.error("Error:", error));
+      .catch((error) => {
+        console.error("Error:", error);
+        alert("음식 기록 저장 중 오류가 발생했습니다.");
+      });
   };
 
   return (
@@ -141,7 +182,7 @@ export default function FoodSearchR() {
             ))}
           </div>
         ) : (
-          <p>Loading...</p>
+          <p>음식을 검색하세요...</p>
         )}
 
         <div className={styles.button_container}>

@@ -2,7 +2,6 @@ import React, { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import config from "../config";
 import "../Style/TodoCalender.css";
-import fetchHelper from "../utils/fetchHelper";
 
 export default function TodoCalender() {
   const navigate = useNavigate();
@@ -19,25 +18,31 @@ export default function TodoCalender() {
 
   // 로그아웃 처리
   const handleLogout = async () => {
-    const response = await fetchHelper(`http://${config.SERVER_URL}/login/logout`, {
-      method: "POST",
-      credentials: "include",
-    });
+    try {
+      const response = await fetch(`http://${config.SERVER_URL}/login/logout`, {
+        method: "POST",
+        credentials: "include",
+      });
 
-    if (response === "network-error") {
+      if (!response.ok) {
+        if (response.status === 404) {
+          navigate("/error/404");
+        } else if (response.status === 500) {
+          navigate("/error/500");
+        } else if (response.status === 503) {
+          navigate("/error/503");
+        } else {
+          throw new Error("로그아웃 실패");
+        }
+      } else {
+        sessionStorage.removeItem("useridRef");
+        navigate("/login");
+      }
+    } catch (error) {
+      console.error("로그아웃 중 오류 발생:", error);
       navigate("/error/500");
-    } else if (response === 404) {
-      navigate("/error/404");
-    } else if (response === 500) {
-      navigate("/error/500");
-    } else if (response === 503) {
-      navigate("/error/503");
-    } else {
-      sessionStorage.removeItem("useridRef");
-      navigate("/login");
     }
   };
-
 
   // 오늘 날짜를 YYYY-MM-DD 형식으로 변환하는 함수
   const getTodayDate = () => {
@@ -48,52 +53,45 @@ export default function TodoCalender() {
   useEffect(() => {
     setSelectedDate(getTodayDate()); // 오늘 날짜로 기본 설정
 
-    fetchHelper(`http://${config.SERVER_URL}/login/validate`, {
+    fetch(`http://${config.SERVER_URL}/login/validate`, {
       method: "GET",
       credentials: "include",
     })
       .then((response) => {
-        if (response === "network-error") {
-          navigate("/error/500");
-          throw new Error("Network error");
-        } else if (response === 404) {
-          navigate("/error/404");
-          throw new Error("404 Not Found");
-        } else if (response === 500) {
-          navigate("/error/500");
-          throw new Error("500 Internal Server Error");
-        } else if (response === 503) {
-          navigate("/error/503");
-          throw new Error("503 Service Unavailable");
+        if (!response.ok) {
+          if (response.status === 404) {
+            navigate("/error/404");
+          } else if (response.status === 500) {
+            navigate("/error/500");
+          } else if (response.status === 503) {
+            navigate("/error/503");
+          } else {
+            throw new Error("Unauthorized");
+          }
         }
-
-        if (!response.ok) throw new Error("Unauthorized");
         return response.json();
       })
       .then((data) => {
         setUserid(data.userid);
 
-        return fetchHelper(`http://${config.SERVER_URL}/food/diet-records/${data.userid}`, {
+        return fetch(`http://${config.SERVER_URL}/food/diet-records/${data.userid}`, {
           method: "GET",
           credentials: "include",
           headers: { "Content-Type": "application/json" },
         });
       })
       .then((response) => {
-        if (response === "network-error") {
-          navigate("/error/500");
-          throw new Error("Network error");
-        } else if (response === 404) {
-          navigate("/error/404");
-          throw new Error("404 Not Found");
-        } else if (response === 500) {
-          navigate("/error/500");
-          throw new Error("500 Internal Server Error");
-        } else if (response === 503) {
-          navigate("/error/503");
-          throw new Error("503 Service Unavailable");
+        if (!response.ok) {
+          if (response.status === 404) {
+            navigate("/error/404");
+          } else if (response.status === 500) {
+            navigate("/error/500");
+          } else if (response.status === 503) {
+            navigate("/error/503");
+          } else {
+            throw new Error("식단 기록 가져오기 실패");
+          }
         }
-
         return response.json();
       })
       .then((data) => {
@@ -111,7 +109,7 @@ export default function TodoCalender() {
         navigate("/login");
       });
   }, [navigate]);
-  
+
   // 선택한 날짜의 데이터 필터링
   const filteredData = userData.filter((record) => {
     const recordDate = new Date(record.timestamp).toISOString().split("T")[0]; // YYYY-MM-DD 형식 변환
@@ -161,12 +159,10 @@ export default function TodoCalender() {
         ) : (
           <p>📭 해당 날짜에 기록이 없습니다.</p>
         )}
-              {/* 🔍 음식 검색 버튼 */}
-      <button onClick={() => navigate("/food")}>음식 검색</button>
+        {/* 🔍 음식 검색 버튼 */}
+        <button onClick={() => navigate("/food")}>음식 검색</button>
       </div>
 
-
-      
       {/* 하단 네비게이션 버튼 */}
       <div className="button-container">
         {[

@@ -2,7 +2,6 @@ import React, { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom"; // 페이지 이동을 위한 훅
 import config from "../config";
 import styles from "../Style/register.module.css";
-import fetchHelper from "../utils/fetchHelper";
 
 export default function Register() {
   const navigate = useNavigate(); // 페이지이동 userNavigate()
@@ -20,7 +19,7 @@ export default function Register() {
     birth: "",
   });
 
-  // 현재 날짜 기준으로 최소 1년 전 날짜 계산 (오늘 날짜나 미래 날짜 선택시 데이터베이스에 부적절한 값이 적용됨됨)
+  // 현재 날짜 기준으로 최소 1년 전 날짜 계산 (오늘 날짜나 미래 날짜 선택시 데이터베이스에 부적절한 값이 적용됨)
   const minBirthDate = new Date();
   minBirthDate.setFullYear(minBirthDate.getFullYear() - 100); // 최대 100년 전까지 입력 가능
   const maxBirthDate = new Date();
@@ -74,7 +73,7 @@ export default function Register() {
     event.preventDefault();
 
     try {
-      const response = await fetchHelper(`http://${config.SERVER_URL}/userinfo/register`, {
+      const response = await fetch(`http://${config.SERVER_URL}/userinfo/register`, {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
@@ -82,29 +81,25 @@ export default function Register() {
         body: JSON.stringify(userInfo),
       });
 
-      if (response === "network-error") {
-        navigate("/error/500");
-        throw new Error("Network error");
-      } else if (response === 404) {
-        navigate("/error/404");
-        throw new Error("404 Not Found");
-      } else if (response === 500) {
-        navigate("/error/500");
-        throw new Error("500 Internal Server Error");
-      } else if (response === 503) {
-        navigate("/error/503");
-        throw new Error("503 Service Unavailable");
-      } else if (response.ok) {
+      if (!response.ok) {
+        if (response.status === 404) {
+          navigate("/error/404");
+        } else if (response.status === 500) {
+          navigate("/error/500");
+        } else if (response.status === 503) {
+          navigate("/error/503");
+        } else {
+          throw new Error("회원가입 실패");
+        }
+      } else {
         alert("회원가입이 성공적으로 완료되었습니다.");
         console.log("User registered successfully");
         navigate("/login");
-      } else {
-        alert("회원가입 실패! 입력한 정보를 다시 확인해주세요.");
-        console.error("Failed to register user");
       }
     } catch (error) {
-      alert("관리자에게 문의해주세요.");
+      alert("서버 오류 발생! 관리자에게 문의하세요.");
       console.error("Error:", error);
+      navigate("/error/500");
     }
   };
 

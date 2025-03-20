@@ -14,10 +14,10 @@ public class OpenApiConfig {
     public OpenAPI customOpenAPI() {
         return new OpenAPI()
                 .info(new Info()
-                        .title("Demo API")
+                        .title("FITEND API")
                         .version("1.0.0")
-                        .description("Demo API 문서입니다. Swagger UI를 통해 API를 확인하고 테스트할 수 있습니다.")
-                        .contact(new Contact().name("Your Name").email("your.email@example.com"))
+                        .description("FITEND 문서입니다. Swagger UI를 통해 API를 확인하고 테스트할 수 있습니다.")
+                        .contact(new Contact().name("FITEND").email("FITEND@naver.com"))
                         .license(new License().name("Apache 2.0").url("http://springdoc.org")));
     }
 }

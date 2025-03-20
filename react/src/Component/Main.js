@@ -4,8 +4,6 @@ import config from "../config";
 import { useSpring, animated } from "react-spring";
 import { useSwipeable } from "react-swipeable";
 import styles from "../Style/main.module.css";
-import fetchHelper from "../utils/fetchHelper";
-import ApiHandler from "./ApiHandlerPage";
 
 export default function Main() {
   const navigate = useNavigate();
@@ -14,7 +12,6 @@ export default function Main() {
   const [loading, setLoading] = useState(true);
   const [jwtString, setJwtString] = useState("");
   const useridRef = useRef(sessionStorage.getItem("userid"));
-  
 
   const swipeHandlers = useSwipeable({
     onSwipedLeft: () => goToNext(),
@@ -27,22 +24,29 @@ export default function Main() {
   const navigateGraph = () => navigate("/Graph");
 
   const handleLogout = async () => {
-    const response = await fetchHelper(`http://${config.SERVER_URL}/login/logout`, {
-      method: "POST",
-      credentials: "include",
-    });
+    try {
+      const response = await fetch(`http://${config.SERVER_URL}/login/logout`, {
+        method: "POST",
+        credentials: "include",
+      });
 
-    if (response === "network-error") {
+      if (!response.ok) {
+        if (response.status === 404) {
+          navigate("/error/404");
+        } else if (response.status === 500) {
+          navigate("/error/500");
+        } else if (response.status === 503) {
+          navigate("/error/503");
+        } else {
+          throw new Error("로그아웃 실패");
+        }
+      } else {
+        sessionStorage.removeItem("userid");
+        navigate("/login");
+      }
+    } catch (error) {
+      console.error("로그아웃 중 오류 발생:", error);
       navigate("/error/500");
-    } else if (response === 404) {
-      navigate("/error/404");
-    } else if (response === 500) {
-      navigate("/error/500");
-    } else if (response === 503) {
-      navigate("/error/503");
-    } else {
-      sessionStorage.removeItem("userid");
-      navigate("/login");
     }
   };
 
@@ -73,77 +77,80 @@ export default function Main() {
     "/image/advertisement_main.png",
   ];
 
-    // JWT 생성 함수
-    const generationJwt = async () => {
-      try {
-        const response = await fetch(`http://${config.SERVER_URL}/userinfo/generation`, {
-          method: "POST",
-          credentials: "include",
-          headers: {
-            "Content-Type": "application/json",
-          },
-          body: JSON.stringify({ userid: useridRef.current }),
-        });
-        if (!response.ok) {
-          throw new Error("Network response was not ok");
+  // JWT 생성 함수
+  const generationJwt = async () => {
+    try {
+      const response = await fetch(`http://${config.SERVER_URL}/userinfo/generation`, {
+        method: "POST",
+        credentials: "include",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({ userid: useridRef.current }),
+      });
+
+      if (!response.ok) {
+        if (response.status === 404) {
+          navigate("/error/404");
+        } else if (response.status === 500) {
+          navigate("/error/500");
+        } else if (response.status === 503) {
+          navigate("/error/503");
+        } else {
+          throw new Error("JWT 생성 실패");
         }
+      } else {
         const token = await response.text();
         setJwtString(token);
         console.log("Received JWT:", token);
-      } catch (error) {
-        console.error("JWT 생성 중 에러 발생:", error);
       }
-    };
-
+    } catch (error) {
+      console.error("JWT 생성 중 에러 발생:", error);
+      navigate("/error/500");
+    }
+  };
 
   useEffect(() => {
-    fetchHelper(`http://${config.SERVER_URL}/login/validate`, {
+    fetch(`http://${config.SERVER_URL}/login/validate`, {
       method: "GET",
       credentials: "include",
     })
       .then((response) => {
-        if (response === "network-error") {
-          navigate("/error/500");
-          throw new Error("Network error");
-        } else if (response === 404) {
-          navigate("/error/404");
-          throw new Error("404 Not Found");
-        } else if (response === 500) {
-          navigate("/error/500");
-          throw new Error("500 Internal Server Error");
-        } else if (response === 503) {
-          navigate("/error/503");
-          throw new Error("503 Service Unavailable");
+        if (!response.ok) {
+          if (response.status === 404) {
+            navigate("/error/404");
+          } else if (response.status === 500) {
+            navigate("/error/500");
+          } else if (response.status === 503) {
+            navigate("/error/503");
+          } else {
+            throw new Error("Unauthorized");
+          }
         }
-
-        if (!response.ok) throw new Error("Unauthorized");
         return response.json();
       })
       .then((data) => {
         console.log("로그인 상태 확인 성공:", data);
         useridRef.current = data.userid;
         sessionStorage.setItem("userid", data.userid);
-        return fetchHelper(`http://${config.SERVER_URL}/userinfobody/recentuserbody/${data.userid}`, {
+        return fetch(`http://${config.SERVER_URL}/userinfobody/recentuserbody/${data.userid}`, {
           method: "GET",
           credentials: "include",
           headers: { "Content-Type": "application/json" },
         });
       })
       .then((response) => {
-        if (response === "network-error") {
-          navigate("/error/500");
-          throw new Error("Network error");
-        } else if (response === 404) {
-          navigate("/error/404");
-          throw new Error("404 Not Found");
-        } else if (response === 500) {
-          navigate("/error/500");
-          throw new Error("500 Internal Server Error");
-        } else if (response === 503) {
-          navigate("/error/503");
-          throw new Error("503 Service Unavailable");
+        if (!response.ok) {
+          if (response.status === 404) {
+            navigate("/error/404");
+          } else if (response.status === 500) {
+            navigate("/error/500");
+          } else if (response.status === 503) {
+            navigate("/error/503");
+          } else {
+            throw new Error("신체 기록 가져오기 실패");
+          }
         }
-
         return response.json();
       })
       .then((bodyData) => {
@@ -151,7 +158,10 @@ export default function Main() {
         setbodyrecord(bodyData);
         setLoading(false);
       })
-     
+      .catch((error) => {
+        console.warn("인증 실패 또는 데이터 불러오기 실패:", error);
+        navigate("/login");
+      });
   }, [navigate]);
 
   return (
@@ -188,7 +198,7 @@ export default function Main() {
           <span className={styles.Span}>Graph</span>
         </div>
         <div className={styles["Button-Item"]}>
-          <img src="/image/Vector8.png" alt="Food" className={styles.ButtonImage} onClick={navigateCalender}/>
+          <img src="/image/Vector8.png" alt="Food" className={styles.ButtonImage} onClick={navigateCalender} />
           <span className={styles.Span}>Food</span>
         </div>
         <div className={styles["Button-Item"]}>

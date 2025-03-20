@@ -2,7 +2,6 @@ import React, { useState, useEffect, useRef } from "react";
 import { useNavigate } from "react-router-dom";
 import config from "../config";
 import styles from "../Style/graph.module.css";
-import fetchHelper from "../utils/fetchHelper";
 import { LineChart, Line, XAxis, YAxis, CartesianGrid, Tooltip, Legend, ResponsiveContainer } from 'recharts';
 
 export default function Graph() {
@@ -14,51 +13,55 @@ export default function Graph() {
   // 누적된 BMI 데이터와 오늘의 BMI 상태 관리
   const [bmiData, setBmiData] = useState([]);
 
-  const navigateMain = () => {navigate("/main");};
-  const navigateToRecordBody = () => {navigate("/recordbody");};
-  const navigateCalender=() => {navigate("/Calender");};
-  const navigateRank = () => {navigate("/rank");};
-  const handleLogout = async () => {
-    const response = await fetchHelper(`http://${config.SERVER_URL}/login/logout`, {
-      method: "POST",
-      credentials: "include",
-    });
+  const navigateMain = () => { navigate("/main"); };
+  const navigateToRecordBody = () => { navigate("/recordbody"); };
+  const navigateCalender = () => { navigate("/Calender"); };
+  const navigateRank = () => { navigate("/rank"); };
 
-    if (response === "network-error") {
+  const handleLogout = async () => {
+    try {
+      const response = await fetch(`http://${config.SERVER_URL}/login/logout`, {
+        method: "POST",
+        credentials: "include",
+      });
+
+      if (!response.ok) {
+        if (response.status === 404) {
+          navigate("/error/404");
+        } else if (response.status === 500) {
+          navigate("/error/500");
+        } else if (response.status === 503) {
+          navigate("/error/503");
+        } else {
+          throw new Error("로그아웃 실패");
+        }
+      } else {
+        sessionStorage.removeItem("userid");
+        navigate("/login");
+      }
+    } catch (error) {
+      console.error("로그아웃 중 오류 발생:", error);
       navigate("/error/500");
-    } else if (response === 404) {
-      navigate("/error/404");
-    } else if (response === 500) {
-      navigate("/error/500");
-    } else if (response === 503) {
-      navigate("/error/503");
-    } else {
-      sessionStorage.removeItem("userid");
-      navigate("/login");
     }
   };
 
   useEffect(() => {
-    fetchHelper(`http://${config.SERVER_URL}/login/validate`, {
+    fetch(`http://${config.SERVER_URL}/login/validate`, {
       method: "GET",
       credentials: "include",
     })
       .then((response) => {
-        if (response === "network-error") {
-          navigate("/error/500");
-          throw new Error("Network error");
-        } else if (response === 404) {
-          navigate("/error/404");
-          throw new Error("404 Not Found");
-        } else if (response === 500) {
-          navigate("/error/500");
-          throw new Error("500 Internal Server Error");
-        } else if (response === 503) {
-          navigate("/error/503");
-          throw new Error("503 Service Unavailable");
+        if (!response.ok) {
+          if (response.status === 404) {
+            navigate("/error/404");
+          } else if (response.status === 500) {
+            navigate("/error/500");
+          } else if (response.status === 503) {
+            navigate("/error/503");
+          } else {
+            throw new Error("Unauthorized");
+          }
         }
-
-        if (!response.ok) throw new Error("Unauthorized");
         return response.json();
       })
       .then((data) => {
@@ -67,27 +70,24 @@ export default function Graph() {
         sessionStorage.setItem("userid", data.userid);
 
         // 사용자 신체 기록 가져오기
-        return fetchHelper(`http://${config.SERVER_URL}/userinfobody/recentuserbody/${data.userid}`, {
+        return fetch(`http://${config.SERVER_URL}/userinfobody/recentuserbody/${data.userid}`, {
           method: "GET",
           credentials: "include",
           headers: { "Content-Type": "application/json" },
         });
       })
       .then((response) => {
-        if (response === "network-error") {
-          navigate("/error/500");
-          throw new Error("Network error");
-        } else if (response === 404) {
-          navigate("/error/404");
-          throw new Error("404 Not Found");
-        } else if (response === 500) {
-          navigate("/error/500");
-          throw new Error("500 Internal Server Error");
-        } else if (response === 503) {
-          navigate("/error/503");
-          throw new Error("503 Service Unavailable");
+        if (!response.ok) {
+          if (response.status === 404) {
+            navigate("/error/404");
+          } else if (response.status === 500) {
+            navigate("/error/500");
+          } else if (response.status === 503) {
+            navigate("/error/503");
+          } else {
+            throw new Error("신체 기록 가져오기 실패");
+          }
         }
-
         return response.json();
       })
       .then((bodyData) => {
@@ -115,11 +115,10 @@ export default function Graph() {
   useEffect(() => {
     if (bodyrecod.length > 0) {
       const newBmiData = [
-        // 누적된 BMI 데이터를 추가
         { name: 'Day 1', bmi: bodyrecod[0].bmi }, 
-        { name: 'Day 2', bmi: bodyrecod[1]?.bmi || bodyrecod[0].bmi }, // 두 번째 데이터가 없으면 첫 번째 데이터로 처리
-        { name: 'Day 3', bmi: bodyrecod[2]?.bmi || bodyrecod[0].bmi }, // 마찬가지
-        { name: 'Today', bmi: bodyrecod[bodyrecod.length - 1]?.bmi || bodyrecod[0].bmi }, // 오늘의 BMI
+        { name: 'Day 2', bmi: bodyrecod[1]?.bmi || bodyrecod[0].bmi },
+        { name: 'Day 3', bmi: bodyrecod[2]?.bmi || bodyrecod[0].bmi },
+        { name: 'Today', bmi: bodyrecod[bodyrecod.length - 1]?.bmi || bodyrecod[0].bmi },
       ];
       setBmiData(newBmiData);
     }
@@ -139,7 +138,7 @@ export default function Graph() {
 
   return (
     <div>
-      {useridRef ? (
+      {useridRef.current ? (
         <>
           <div className={styles["Graph_Container"]}>
             <img src="/image/black.png" alt="Background" className={styles["MainImage"]} />
@@ -178,7 +177,6 @@ export default function Graph() {
                   <p className={styles["text"]}>{bodyrecod[0].bmi}</p>
                 </div>
               </div>
-              {/* 기타 UI 구성 */}
               <div className={styles["Button-Container"]}>
                 <div className={styles["Button-Item"]}>
                   <img src="/image/HOME.png" alt="Main" className={styles["ButtonImage"]} onClick={navigateMain} />

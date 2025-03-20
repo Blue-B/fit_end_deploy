@@ -1,17 +1,18 @@
-import React, { useState,useEffect } from "react";
+import React, { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import config from "../config";
 import styles from "../Style/login.module.css";
-import fetchHelper from "../utils/fetchHelper";
 
 export default function Login() {
   const [userid, setUserId] = useState("");
   const [password, setPassword] = useState("");
   const [errorMessage, setErrorMessage] = useState("");
   const navigate = useNavigate();
+
   const navigateToRegister = () => {
     navigate('/register');
   };
+
   const handleSubmit = async (event) => {
     event.preventDefault();
 
@@ -21,38 +22,36 @@ export default function Login() {
     };
 
     try {
-      const response = await fetchHelper(
-        `http://${config.SERVER_URL}/login/login`,
-        {
-          method: "POST",
-          headers: {
-            "Content-Type": "application/json",
-          },
-          credentials: "include",
-          body: JSON.stringify(userInfo),
+      const response = await fetch(`http://${config.SERVER_URL}/login/login`, {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        credentials: "include",
+        body: JSON.stringify(userInfo),
+      });
+
+      if (!response.ok) {
+        if (response.status === 404) {
+          navigate("/error/404");
+        } else if (response.status === 500) {
+          navigate("/error/500");
+        } else if (response.status === 503) {
+          navigate("/error/503");
+        } else {
+          setErrorMessage("로그인 실패! 아이디 또는 비밀번호를 확인하세요.");
         }
-      );
-      if (response === "network-error") {
-        navigate("/error/500"); // 서버 오류
-      } else if (response === "404") {
-        navigate("/error/404"); // 404 페이지
-      } else if (response === "500") {
-        navigate("/error/500"); // 500 페이지
-      } else if (response === "503") {
-        navigate("/error/503"); // 503 페이지
-      } else if (response.ok) {
+      } else {
         const data = await response.json();
         console.log("Login successful");
         alert("로그인 성공!");
         sessionStorage.setItem("userid", data.userid);
         navigate("/main"); // 로그인 성공 후 메인 페이지로 이동
-      } else {
-        setErrorMessage("로그인 실패! 아이디 또는 비밀번호를 확인하세요.");
       }
-
     } catch (error) {
       setErrorMessage("서버 오류 발생! 관리자에게 문의하세요.");
       console.error("Error:", error);
+      navigate("/error/500");
     }
   };
 
@@ -60,7 +59,7 @@ export default function Login() {
     if (sessionStorage.getItem("userid")) {
       navigate("/main");
     }
-  }, []);
+  }, [navigate]);
 
   return (
     <div>
@@ -92,11 +91,11 @@ export default function Login() {
           </div>
           <button className={styles["LOGIN_BUTTON"]} type="submit">LOGIN</button>
           <div className={styles["SIGNUP_BUTTON"]}>
-              Don't have an account?
-          <button className={styles["BUTTON_SIGN_UP"]} onClick={navigateToRegister}>Sign_up</button>
+            Don't have an account?
+            <button className={styles["BUTTON_SIGN_UP"]} onClick={navigateToRegister}>Sign_up</button>
           </div>
         </form>
-        </div>
+      </div>
     </div>
   );
 }

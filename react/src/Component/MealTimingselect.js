@@ -3,12 +3,11 @@ import { useNavigate, useLocation } from 'react-router-dom';
 import 'react-calendar/dist/Calendar.css';
 import styles from "../Style/MealTimingselect.module.css";
 import config from "../config";
-import fetchHelper from "../utils/fetchHelper";
 
 export default function MealTimingselect() {
     const location = useLocation();
     const navigate = useNavigate();
-    const mealTypes = ["moning", "lunch", "dinner", "dessert"];// 아침, 점심, 저녁
+    const mealTypes = ["moning", "lunch", "dinner", "dessert"]; // 아침, 점심, 저녁
 
     // 🟢 selectedDate를 올바르게 초기화
     const { selectedDate: selectedDateRaw } = location.state || {};
@@ -35,30 +34,53 @@ export default function MealTimingselect() {
     };
 
     useEffect(() => {
-        fetchHelper(`http://${config.SERVER_URL}/login/validate`, {
+        fetch(`http://${config.SERVER_URL}/login/validate`, {
             method: "GET",
             credentials: "include",
         })
         .then((response) => {
-            if (!response.ok) throw new Error("Unauthorized");
+            if (!response.ok) {
+                if (response.status === 404) {
+                    navigate("/error/404");
+                } else if (response.status === 500) {
+                    navigate("/error/500");
+                } else if (response.status === 503) {
+                    navigate("/error/503");
+                } else {
+                    throw new Error("Unauthorized");
+                }
+            }
             return response.json();
         })
         .then((data) => {
             setUserid(data.userid);
-            return fetchHelper(`http://${config.SERVER_URL}/food/diet-records/${data.userid}`, {
+            return fetch(`http://${config.SERVER_URL}/food/diet-records/${data.userid}`, {
                 method: "GET",
                 credentials: "include",
                 headers: { "Content-Type": "application/json" },
             });
         })
-        .then((response) => response.json())
+        .then((response) => {
+            if (!response.ok) {
+                if (response.status === 404) {
+                    navigate("/error/404");
+                } else if (response.status === 500) {
+                    navigate("/error/500");
+                } else if (response.status === 503) {
+                    navigate("/error/503");
+                } else {
+                    throw new Error("Failed to fetch diet records");
+                }
+            }
+            return response.json();
+        })
         .then((data) => {
             setMealData(data);
             const dates = [...new Set(data.map((record) => formatDate(new Date(record.timestamp))))].sort(
                 (a, b) => new Date(b) - new Date(a)
             );
             setAvailableDates(dates);
-    
+
             if (!selectedDateRaw && dates.length > 0) {
                 setSelectedDate(new Date(dates[0]));
             }
@@ -89,8 +111,6 @@ export default function MealTimingselect() {
         navigate("/login");
     };
 
-
-
     return (
         <div className={styles.MealTimingselect_Container}>
             <img src="/image/black.png" alt="Background" className={styles.MainImage} />
@@ -100,8 +120,6 @@ export default function MealTimingselect() {
                  src="/image/foodlist/moning_food.png"
                  alt="moning-food"
                  className={styles.moning}></img>
-
-
             <img
                 src="/image/foodlist/Lunch_food.png"
                 alt="lunch-food"
@@ -222,7 +240,7 @@ export default function MealTimingselect() {
                 <h3 className={styles["meal-title"]}></h3>
                 {mealData.filter(
                     (record) =>
-                    record.dietMemo === "dessert" && // Fixed typo from "desset" to "dessert"
+                    record.dietMemo === "dessert" &&
                     formatDate(new Date(record.timestamp)) === selectedDateFormatted
                 ).length > 0 ? (
                     <span className={styles["meal-calories"]}>
@@ -292,5 +310,5 @@ export default function MealTimingselect() {
             </div>
             </div>
         </div>
-        );
-    }
+    ); 
+}

@@ -47,7 +47,17 @@ const MealCalendar = () => {
       credentials: "include",
     })
       .then((response) => {
-        if (!response.ok) throw new Error("Unauthorized");
+        if (!response.ok) {
+          if (response.status === 404) {
+            navigate("/error/404");
+          } else if (response.status === 500) {
+            navigate("/error/500");
+          } else if (response.status === 503) {
+            navigate("/error/503");
+          } else {
+            throw new Error("Unauthorized");
+          }
+        }
         return response.json();
       })
       .then((data) => {
@@ -64,7 +74,17 @@ const MealCalendar = () => {
         );
       })
       .then((response) => {
-        if (!response.ok) throw new Error("서버 응답 실패");
+        if (!response.ok) {
+          if (response.status === 404) {
+            navigate("/error/404");
+          } else if (response.status === 500) {
+            navigate("/error/500");
+          } else if (response.status === 503) {
+            navigate("/error/503");
+          } else {
+            throw new Error("서버 응답 실패");
+          }
+        }
         return response.json();
       })
       .then((data) => {
@@ -183,52 +203,52 @@ const MealCalendar = () => {
         )}
       </div>
       <div className={styles["Button-Container"]}>
-            <div className={styles["Button-Item"]}>
-                <img
-                src="/image/HOME.png"
-                alt="Main"
-                className={styles.ButtonImage}
-                onClick={navigateMain}
-                />
-                <span className={styles.Span}>Main</span>
-            </div>
-            <div className={styles["Button-Item"]}>
-                <img
-                src="/image/PAPAR.png"
-                alt="Paper"
-                className={styles.ButtonImage}
-                onClick={navigateToRecordBody}
-                />
-                <span className={styles.Span}>Paper</span>
-            </div>
-            <div className={styles["Button-Item"]}>
-                <img
-                src="/image/Vector7.png"
-                alt="rank"
-                className={styles.ButtonImage}
-                onClick={navigateGraph}
-                />
-                <span className={styles.Span}>Graph</span>
-            </div>
-            <div className={styles["Button-Item"]}>
-                <img
-                src="/image/Vector8.png"
-                alt="Food"
-                className={styles.ButtonImage}
-                onClick={navigateFood}
-                />
-                <span className={styles.Span}>Food</span>
-            </div>
-            <div className={styles["Button-Item"]}>
-                <img
-                src="/image/PEOPLE.png"
-                alt="Logout"
-                className={styles.ButtonImage}
-                onClick={handleLogout}
-                />
-                <span className={styles.Span}>Logout</span>
-            </div>
-            </div>
+        <div className={styles["Button-Item"]}>
+          <img
+            src="/image/HOME.png"
+            alt="Main"
+            className={styles.ButtonImage}
+            onClick={navigateMain}
+          />
+          <span className={styles.Span}>Main</span>
+        </div>
+        <div className={styles["Button-Item"]}>
+          <img
+            src="/image/PAPAR.png"
+            alt="Paper"
+            className={styles.ButtonImage}
+            onClick={navigateToRecordBody}
+          />
+          <span className={styles.Span}>Paper</span>
+        </div>
+        <div className={styles["Button-Item"]}>
+          <img
+            src="/image/Vector7.png"
+            alt="rank"
+            className={styles.ButtonImage}
+            onClick={navigateGraph}
+          />
+          <span className={styles.Span}>Graph</span>
+        </div>
+        <div className={styles["Button-Item"]}>
+          <img
+            src="/image/Vector8.png"
+            alt="Food"
+            className={styles.ButtonImage}
+            onClick={navigateFood}
+          />
+          <span className={styles.Span}>Food</span>
+        </div>
+        <div className={styles["Button-Item"]}>
+          <img
+            src="/image/PEOPLE.png"
+            alt="Logout"
+            className={styles.ButtonImage}
+            onClick={handleLogout}
+          />
+          <span className={styles.Span}>Logout</span>
+        </div>
+      </div>
     </div>
   );
 };
