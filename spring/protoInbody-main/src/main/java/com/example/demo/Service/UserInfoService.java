@@ -32,23 +32,38 @@ public class UserInfoService {
     }
 
     public String generateAPiToken(UserInfoDTO UserInfoDTO) {
-        UserInfo userInfo = RepoUserInfo.findByUserid(UserInfoDTO.getUserid()); // userInfo 객체 가져오기
+        UserInfo userInfo = RepoUserInfo.findByUserid(UserInfoDTO.getUserid());
 
+        System.out.println("일단 확인 " + userInfo);
         if (userInfo == null) {
-            return "오류"; // userInfo가 null일 경우 "오류"를 반환합니다.
+            throw new RuntimeException("사용자를 찾을 수 없습니다.");
         }
 
-        // 기존 JWT가 있으면 반환합니다.
-        if (userInfo.getJwt() != null && !userInfo.getJwt().isEmpty()) {
-            return userInfo.getJwt();
+        boolean isTokenExpired = true;
+
+        if (userInfo.getJwt() != null) {
+            try {
+                isTokenExpired = jwtUtil.isTokenExpired(userInfo.getJwt());
+            } catch (io.jsonwebtoken.ExpiredJwtException e) {
+                // 토큰이 만료되었을 때 예외가 발생하면 여기서 처리
+                System.out.println("토큰이 만료되었습니다: " + e.getMessage());
+                isTokenExpired = true;
+            } catch (Exception e) {
+                // 기타 예외 처리
+                System.out.println("토큰 검증 중 오류 발생: " + e.getMessage());
+                isTokenExpired = true;
+            }
         }
 
-        // 새로운 JWT를 생성하고 저장합니다.
-        String jwt = jwtUtil.generateToken(UserInfoDTO.getUserid(), 24);
-        userInfo.setJwt(jwt);
-        RepoUserInfo.save(userInfo);
+        if (userInfo.getJwt() == null || isTokenExpired) {
+            String jwt = jwtUtil.generateToken(UserInfoDTO.getUserid(), 1);
+            System.out.println(jwt + "갱신");
+            userInfo.setJwt(jwt);
+            RepoUserInfo.save(userInfo);
+        }
 
         return userInfo.getJwt();
+
     }
 
 }
