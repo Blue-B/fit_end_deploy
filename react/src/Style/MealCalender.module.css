@@ -157,8 +157,8 @@ body, html {
 
 /* 선택된 날짜 텍스트 */
 .selected-date-text {
-  position: absolute;
-  margin-top: 25px;
+
+  margin-top: 10px;
   color: #e7e7e7;
   font-weight: bold;
   font-size: 13px;
@@ -180,11 +180,10 @@ body, html {
 
 /* 기록 없음 메시지 */
 .no-record-text {
-  position: absolute;
   color: #e7e7e7;
   font-style: italic;
   font-size: 13px;
-  margin-top: 46px;
+  margin-top: 6px;
 }
 
 /* 추가된 스타일: 먹기 버튼 */

@@ -64,14 +64,14 @@ public class FoodService {
         List<FoodDto> foodDetailsList = new ArrayList<>();
 
         List<RawFood> rawFoods = RepoRawFood.findByFoodNmContaining(foodNm);
-        System.out.println("시발: " + rawFoods);
+        System.out.println("rawFoods: " + rawFoods);
         for (RawFood rawFood : rawFoods) {
 
             FoodDto foodDto = ConversionService.convertToDto(rawFood, FoodDto.class);
 
             foodDetailsList.add(foodDto);
         }
-        System.out.println("tlqkf :" + foodDetailsList);
+        System.out.println("foodDetailList :" + foodDetailsList);
 
         return foodDetailsList;
     }

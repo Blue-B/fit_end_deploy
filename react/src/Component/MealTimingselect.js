@@ -97,74 +97,54 @@ export default function MealTimingselect() {
             <a className={styles.MealTimeingslelect_title}>FitEnd</a>
             <div className={styles.content}>
             <img
-                src="/image/foodlist/Rectangleboder.png"
-                alt="ground"
-                className={styles.Rectangleground_right}
+                 src="/image/foodlist/moning_food.png"
+                 alt="moning-food"
+                 className={styles.moning}></img>
+
+
+            <img
+                src="/image/foodlist/Lunch_food.png"
+                alt="lunch-food"
+                className={styles.lunch}
             />
             <img
-                src="/image/foodlist/Rectangleboder.png"
-                alt="ground"
-                className={styles.Rectangleground_left}
+                src="/image/foodlist/Dinner_food.png"
+                alt="dinner-food"
+                className={styles.dinner}
             />
             <img
-                src="/image/foodlist/Rectangleboder.png"
-                alt="ground"
-                className={styles.Rectangleground_bottom_right}
-            />
-            <img
-                src="/image/foodlist/Rectangleboder.png"
-                alt="ground"
-                className={styles.Rectangleground_bottom_left}
-            />
-            <img
-                src="/image/foodlist/toast_6168691.png"
-                alt="toast"
-                className={styles.moning_toast}
-            />
-            <img
-                src="/image/foodlist/noodles_4359781.png"
-                alt="nodles"
-                className={styles.lunch_nodles}
-            />
-            <img
-                src="/image/foodlist/roast-chicken_4490344.png"
-                alt="roast_chicken"
-                className={styles.dinner_roast}
-            />
-            <img
-                src="/image/foodlist/cupcake_497854.png"
-                alt="cupcake"
-                className={styles.cupcake}
-            />
+                src="/image/foodlist/Dessert_food.png"
+                alt="dessert-food"
+                className={styles.desser}></img>
     
-            <a className={styles.Moning}>Moning</a>
-            <a className={styles.Lunch}>LUNCH</a>
-            <a className={styles.Dinner}>DINNER</a>
-            <a className={styles.Dessert}>DESSERT</a>
+                <a className={styles.MoningText}>Moning</a>
+                <a className={styles.LunchText}>LUNCH</a>
+                <a className={styles.DinnerText}>DINNER</a>
+                <a className={styles.DessertText}>DESSERT</a>
     
             <button
                 className={styles.plus_button_left}
                 onClick={() => handleMealSelection("moning")}
             >
-                <img src="/image/foodlist/Group30.png" alt="plus" />
+                <img src="/image/foodlist/⟫.png" alt="plus" />
             </button>
             <button
                 className={styles.plus_button_right}
                 onClick={() => handleMealSelection("lunch")}
             >
-                <img src="/image/foodlist/Group30.png" alt="plus" />
+                <img src="/image/foodlist/⟫.png" alt="plus" />
             </button>
             <button
                 className={styles.plus_button_bottomleft}
                 onClick={() => handleMealSelection("dinner")}
             >
-                <img src="/image/foodlist/Group30.png" alt="plus" />
+                <img src="/image/foodlist/⟫.png" alt="plus" />
             </button>
             <button
                 className={styles.plus_button_bottomright}
                 onClick={() => handleMealSelection("dessert")}
             >
-                <img src="/image/foodlist/Group30.png" alt="plus" />
+                <img src="/image/foodlist/⟫.png" alt="plus" />
             </button>
     
             <div className={styles["meal-data"]}>
@@ -261,12 +241,7 @@ export default function MealTimingselect() {
                 )}
                 </div>
             </div>
-            <button className={styles.greenbutton} onClick={navigateFoodSearchR}>
-                Check meal details
-            </button>
-            <button className={styles.yellowbutton} onClick={navigateCalender}>
-                Calendar shortcuts
-            </button>
+            
             </div>
     
             <div className={styles["Button-Container"]}>

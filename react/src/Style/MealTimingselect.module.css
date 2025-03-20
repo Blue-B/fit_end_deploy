@@ -87,82 +87,79 @@ body, html {
   right: 10%;
 }
 
-.moning_toast{
+.moning{
   position: absolute;
-  width: 80px;
-  top: 19.5%;
-  left: 17.5%;
-  transform: rotate(-12deg);
-  z-index: 2;
+  width: 166px;
+  height: 242px;
+  top: 15.5%;
+  left: 5.5%;
 }
 
-.lunch_nodles{
+.lunch{
   position: absolute;
-  width: 80px;
-  top: 20%;
-  right: 17.5%;
-  transform: rotate(15deg);
-  z-index: 2;
+  width: 166px;
+  height: 242px;
+  top: 15.5%;
+  right: 5.5%;
 
 }
 
-.dinner_roast{
+.dinner{
   position: absolute;
-  width: 70px;
-  top: 45%;
-  left: 20.5%;
-  transform: rotate(10deg);
-  z-index: 2;
+  width: 166px;
+  height: 242px;
+  top: 55%;
+  left: 5.5%;
 }
 
-.cupcake{
+.desser{
   position: absolute;
-  width: 70px;
-  top: 45%;
-  right: 20.5%;
-  transform: rotate(-11deg);
+  width: 166px;
+  height: 242px;
+  top: 55%;
+  right: 5.5%;
 }
 
-.Moning{
+.MoningText{
   position: absolute;
   font-family: 'Jaro', sans-serif;
-  font-size: 25px;
-  top:  15.7%;
-  left: 13%;
+  font-size: 35px;
+  top: 40.5%;
+  left: 8%;
   z-index: 2;
   color: #F7FFCC;
   text-shadow: 0 5px 10px rgba(0, 0, 0, 0.5);
 
 }
 
-.Lunch{
+.LunchText{
   position: absolute;
   font-family: 'Jaro', sans-serif;
-  font-size: 25px;
-  top: 15.7%;
-  right: 13%;
+  font-size: 35px;
+  top: 40.5%;
+  right: 22%;
   z-index: 2;
   color: #F7FFCC;
   text-shadow: 0 5px 10px rgba(0, 0, 0, 0.5);
 }
 
-.Dinner{
+.DinnerText{
   position: absolute;
   font-family: 'Jaro', sans-serif;
-  font-size: 25px;
-  top: 40%;
-  left: 13%;
+  font-size: 35px;
+  top: 80%;
+  left: 8%;
   z-index:2;
   color: #F7FFCC;
   text-shadow: 0 5px 10px rgba(0, 0, 0, 0.5);
 }
 
-.Dessert{
+.DessertText{
   position: absolute;
   font-family: 'Jaro', sans-serif;
-  font-size: 25px;
-  top: 40%;
-  right:13%; 
+  font-size: 35px;
+  top: 80%;
+  right: 15%;
   z-index:2;
   color: #F7FFCC;
   text-shadow: 0 5px 10px rgba(0, 0, 0, 0.5);
@@ -174,7 +171,7 @@ body, html {
   border: none;
   padding: 10px 20px; /* 버튼 크기 조정 */
   cursor: pointer; /* 마우스 포인터 변경 */
-  top: 30.5%;
+  top: 40.5%;
   left: 35%;
 }
 
@@ -184,8 +181,8 @@ body, html {
   border: none;
   padding: 10px 20px; /* 버튼 크기 조정 */
   cursor: pointer; /* 마우스 포인터 변경 */
-  top: 30.5%;
-  right: 35%;
+  top: 40.5%;
+  right: 3%;
 }
 
 .plus_button_bottomleft{
@@ -194,7 +191,7 @@ body, html {
   border: none;
   padding: 10px 20px;
   cursor: pointer;
-  top: 55%;
+  top: 80%;
   left: 35%;
 }
 
@@ -204,8 +201,8 @@ body, html {
   border: none;
   padding: 10px 20px;
   cursor: pointer;
-  top: 55%;
-  right: 35%;
+  top: 80%;
+  right: 3%;
 }
 
 /* 🍞 아침 (moning) */

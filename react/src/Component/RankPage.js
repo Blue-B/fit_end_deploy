@@ -50,7 +50,7 @@ export default function RankPage() {
 
   const navigate = useNavigate();
   const navigateMain = () => navigate("/main");
-  const navigateToRecordBody = () => navigate("/recodbody");
+  const navigateToRecordBody = () => navigate("/recordbody");
   const navigateCalender = () => {navigate("/Calender")};
   const navigateGraph = () => navigate("/Graph");
 
@@ -158,6 +158,7 @@ export default function RankPage() {
       <div className={styles["Main_Container"]}>
         <a className={styles["RecordBodyTitle"]}>FitEnd</a>
         <img src="/image/backgroundImage/Rectangle23.png" alt="Background" className={styles["MainImage"]} />
+        <img src="/image/backgroundImage/별배경.png" alt="Background" className={styles["MainImage_Top"]} />
         <a className={styles["RecordBodyMainTitle"]}>Ranking</a>
     
         {/* 🚀 1~3등 프로필 */}
