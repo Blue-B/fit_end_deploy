@@ -30,6 +30,7 @@ public class SecurityConfig {
                         // API 관련 URL 설정
                         .requestMatchers("/login/login").permitAll()
                         .requestMatchers("/userinfo/register").permitAll()
+                        .requestMatchers("/userinfo/checkUseridEmail").permitAll()
                         .requestMatchers("/api/data").permitAll()
                         .requestMatchers("/api/body").permitAll()
                         .requestMatchers("/swagger-ui/**", "/v3/api-docs/**").permitAll()

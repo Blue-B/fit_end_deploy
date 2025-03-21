@@ -9,6 +9,9 @@ export default function Register() {
   const [isKakaoLoaded, setIsKakaoLoaded] = useState(false);
   const [isPostcodeLoaded, setIsPostcodeLoaded] = useState(false);
 
+  const [isDuplicateChecked, setIsDuplicateChecked] = useState(false);
+  const [isFormValid, setIsFormValid] = useState(false);
+
   const [userInfo, setUserInfo] = useState({
     userid: "",
     password: "",
@@ -60,9 +63,25 @@ export default function Register() {
 
     loadPostcodeScript();
   }, []);
+  useEffect(() => {
+    // 모든 필수 필드가 채워져 있고 중복 체크가 완료되었는지 확인
+    const isAllFieldsFilled =
+      userInfo.userid &&
+      userInfo.password &&
+      userInfo.email &&
+      userInfo.sex &&
+      userInfo.region1 &&
+      userInfo.region2 &&
+      userInfo.birth;
+
+    setIsFormValid(isAllFieldsFilled && isDuplicateChecked);
+  }, [userInfo, isDuplicateChecked]);
 
   const handleChange = (e) => {
     const { name, value } = e.target;
+    if (name === "userid" || name === "email") {
+      setIsDuplicateChecked(false);
+    }
     setUserInfo({
       ...userInfo,
       [name]: value,
@@ -73,13 +92,16 @@ export default function Register() {
     event.preventDefault();
 
     try {
-      const response = await fetch(`http://${config.SERVER_URL}/userinfo/register`, {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify(userInfo),
-      });
+      const response = await fetch(
+        `http://${config.SERVER_URL}/userinfo/register`,
+        {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify(userInfo),
+        }
+      );
 
       if (!response.ok) {
         if (response.status === 404) {
@@ -125,12 +147,71 @@ export default function Register() {
     }).open();
   };
 
+  const checkUseridEmail = async (e) => {
+    e.preventDefault(); // 버튼 클릭 시 폼 제출 방지
+
+    // 아이디나 이메일이 비어있는지 확인
+    if (!userInfo.userid || !userInfo.email) {
+      alert("아이디와 이메일을 모두 입력해주세요.");
+      return;
+    }
+
+    try {
+      const response = await fetch(
+        `http://${config.SERVER_URL}/userinfo/checkUseridEmail`,
+        {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify({
+            userid: userInfo.userid,
+            email: userInfo.email,
+          }),
+        }
+      );
+
+      if (!response.ok) {
+        throw new Error("중복 체크 중 오류가 발생했습니다.");
+      }
+
+      const result = await response.json();
+
+      // 중복 체크 결과 처리
+      if (result.isUseridExists && result.isEmailExists) {
+        alert("아이디와 이메일이 모두 이미 사용 중입니다.");
+        setIsDuplicateChecked(false);
+      } else if (result.isUseridExists) {
+        alert("이미 사용 중인 아이디입니다. 다른 아이디를 입력해주세요.");
+        setIsDuplicateChecked(false);
+      } else if (result.isEmailExists) {
+        alert("이미 사용 중인 이메일입니다. 다른 이메일을 입력해주세요.");
+        setIsDuplicateChecked(false);
+      } else {
+        alert("사용 가능한 아이디와 이메일입니다.");
+        setIsDuplicateChecked(true);
+      }
+    } catch (error) {
+      console.error("Error:", error);
+      alert("중복 체크 중 오류가 발생했습니다: " + error.message);
+      setIsDuplicateChecked(false);
+    }
+  };
+
   return (
     <div className={styles["Register_Container"]}>
       <div className={styles["Main_container"]}>
         <div className={styles["Main_image"]}>
-          <img src="/image/RegisterImage.jpg" alt="Background" className={styles["RegisterImage"]} />
-          <img src="/image/Vector9.png" alt="Overlay" className={styles["RegisterImage_Vector"]} />
+          <img
+            src="/image/RegisterImage.jpg"
+            alt="Background"
+            className={styles["RegisterImage"]}
+          />
+          <img
+            src="/image/Vector9.png"
+            alt="Overlay"
+            className={styles["RegisterImage_Vector"]}
+          />
         </div>
       </div>
       <h2 className={styles["Register_Title"]}>SIGN UP</h2>
@@ -146,6 +227,7 @@ export default function Register() {
             required
           />
         </div>
+
         <div>
           <label className={styles["PASSWORD"]}>Password:</label>
           <input
@@ -195,17 +277,44 @@ export default function Register() {
             </label>
           </div>
         </div>
-        <div>
-          <label className={styles["PROVINCE"]}>Province:</label>
-          <input className={styles["input_text"]} type="text" name="region1" value={userInfo.region1} readOnly />
+
+        <div className={styles["중복체크"]}>
+          <button
+            type="button"
+            className={styles["추후수정 요망"]}
+            onClick={checkUseridEmail}
+          >
+            아이디/이메일 중복 체크
+          </button>
         </div>
         <div>
-          <label className={styles["CITY"]}>City:
-          <button className={styles["CITY_Button"]} type="button" onClick={handleAddressSearch}>
-            주소 검색
-          </button>
+          <label className={styles["PROVINCE"]}>Province:</label>
+          <input
+            className={styles["input_text"]}
+            type="text"
+            name="region1"
+            value={userInfo.region1}
+            readOnly
+          />
+        </div>
+        <div>
+          <label className={styles["CITY"]}>
+            City:
+            <button
+              className={styles["CITY_Button"]}
+              type="button"
+              onClick={handleAddressSearch}
+            >
+              주소 검색
+            </button>
           </label>
-          <input className={styles["input_text"]} type="text" name="region2" value={userInfo.region2} readOnly />
+          <input
+            className={styles["input_text"]}
+            type="text"
+            name="region2"
+            value={userInfo.region2}
+            readOnly
+          />
         </div>
         <div>
           <label className={styles["BIRTH"]}>Birth:</label>
@@ -220,8 +329,23 @@ export default function Register() {
             required
           />
         </div>
-        <button className={styles["Register_Button"]} type="submit">회원가입</button>
+        <button
+          className={styles["Register_Button"]}
+          type="submit"
+          disabled={!isFormValid}
+          style={{
+            backgroundColor: isFormValid ? "#4CAF50" : "#cccccc",
+            cursor: isFormValid ? "pointer" : "not-allowed",
+          }}
+        >
+          회원가입
+        </button>
       </form>
+      {!isDuplicateChecked && (
+        <p className={styles["추후수정"]}>
+          아이디와 이메일 중복 체크를 완료해야 회원가입이 가능합니다.
+        </p>
+      )}
     </div>
   );
 }
