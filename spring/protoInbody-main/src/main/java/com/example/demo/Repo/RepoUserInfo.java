@@ -21,4 +21,8 @@ public interface RepoUserInfo extends JpaRepository<UserInfo, Long> {
 
     UserInfo findSexByUserid(String userid);
 
+    // 이메일 유저아이디 중복체크
+    boolean existsByUserid(String userid);
+
+    boolean existsByEmail(String email);
 }

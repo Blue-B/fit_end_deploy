@@ -3,6 +3,8 @@ package com.example.demo.Service;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 
 import java.util.Date;
+import java.util.HashMap;
+import java.util.Map;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -32,6 +34,28 @@ public class UserInfoService {
         RepoUserInfo.save(EntityConversionService.convertToEntity(userInfoDTO, UserInfo.class));
         // generateAPiToken(userInfoDTO);
         return userInfoDTO;
+    }
+
+    // 중복체크
+    public Map<String, Boolean> checkUseridEmail(UserInfoDTO userInfoDTO) {
+        Map<String, Boolean> result = new HashMap<>();
+
+        // 아이디 중복 체크
+        boolean isUseridExists = false;
+        if (userInfoDTO.getUserid() != null && !userInfoDTO.getUserid().isEmpty()) {
+            isUseridExists = RepoUserInfo.existsByUserid(userInfoDTO.getUserid());
+        }
+
+        // 이메일 중복 체크
+        boolean isEmailExists = false;
+        if (userInfoDTO.getEmail() != null && !userInfoDTO.getEmail().isEmpty()) {
+            isEmailExists = RepoUserInfo.existsByEmail(userInfoDTO.getEmail());
+        }
+
+        result.put("isUseridExists", isUseridExists);
+        result.put("isEmailExists", isEmailExists);
+
+        return result;
     }
 
     public String generateAPiToken(UserInfoDTO UserInfoDTO) {
