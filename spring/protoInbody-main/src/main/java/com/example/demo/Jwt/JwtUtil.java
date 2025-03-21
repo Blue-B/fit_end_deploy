@@ -23,6 +23,7 @@ public class JwtUtil {
     private final String SECRET_KEY = "my_super_secret_key_which_is_at_least_32_chars_long"; // 반드시 32자 이상으로 설정
     private final Key secretKey = Keys.hmacShaKeyFor(SECRET_KEY.getBytes(StandardCharsets.UTF_8));
 
+    // 토큰 생성
     public String generateToken(String username, int hour) {
         return Jwts.builder()
                 .setSubject(username)
@@ -32,6 +33,7 @@ public class JwtUtil {
                 .compact();
     }
 
+    // 토큰 검증
     public boolean validateToken(String token, String username) {
         String extractedUsername = extractUsername(token);
         System.out.println("JWT에서 추출된 유저명: " + extractedUsername);
@@ -40,6 +42,7 @@ public class JwtUtil {
         return (extractedUsername != null && extractedUsername.equals(username) && !isTokenExpired(token));
     }
 
+    // 이름 추출
     public String extractUsername(String token) {
         return extractClaims(token).getSubject();
     }
@@ -52,10 +55,12 @@ public class JwtUtil {
                 .getBody();
     }
 
+    // 만료 검증
     public boolean isTokenExpired(String token) {
         return extractClaims(token).getExpiration().before(new Date());
     }
 
+    // 쿠키 생성
     public ResponseCookie createJwtCookie(String jwt, int hour) {
         return ResponseCookie.from("jwt", jwt)
                 .httpOnly(true) // JavaScript에서 접근 불가
@@ -88,10 +93,12 @@ public class JwtUtil {
         return null; // 유효하지 않으면 null 반환
     }
 
+    // 토큰 생성 시간 확인
     public Date getIssuedAtDateFromToken(String token) {
         return getClaimFromToken(token, Claims::getIssuedAt);
     }
 
+    // 토큰 만료 시간 확인
     public Date getExpirationDateFromToken(String token) {
         return getClaimFromToken(token, Claims::getExpiration);
     }

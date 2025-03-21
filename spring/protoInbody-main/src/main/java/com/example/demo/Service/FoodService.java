@@ -14,7 +14,7 @@ import com.example.demo.Repo.RepoRawFood;
 import com.example.demo.Repo.RepoUserInfo;
 import com.example.demo.Service.Utile.ConversionService;
 
-@Service
+@Service // 식단 관련 서비스
 public class FoodService {
 
     @Autowired

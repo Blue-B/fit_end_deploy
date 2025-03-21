@@ -7,7 +7,7 @@ import io.swagger.v3.oas.annotations.media.Schema;
 import java.util.Date;
 
 @JsonIgnoreProperties(ignoreUnknown = true)
-@Schema(description = "음식 정보 DTO. 영양 정보, 사용자 정보 및 추가 메타데이터를 포함합니다.")
+@Schema(description = "식단인 음식 정보 DTO. 영양 정보, 사용자 정보 및 추가 메타데이터를 포함합니다.")
 public class FoodDto implements HasUserId {
 
     @Schema(description = "음식 이름", example = "김치")

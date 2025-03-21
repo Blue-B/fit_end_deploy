@@ -11,6 +11,7 @@ import java.util.List;
 
 public class RawFoodSpecification {
 
+    // 동적 쿼리 생성
     public static Specification<RawFood> getRawFoodSpecification(RawFoodDto rawFoodDto, NutrientDto nutrientDto,
             MetaDataDto metaDataDto) {
         return (root, query, criteriaBuilder) -> {

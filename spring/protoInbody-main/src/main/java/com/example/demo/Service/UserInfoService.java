@@ -13,7 +13,7 @@ import com.example.demo.Jwt.JwtUtil;
 import com.example.demo.Repo.RepoUserInfo;
 import com.example.demo.Service.Utile.ConversionService;
 
-@Service
+@Service // 유저 정보기반 서비스
 public class UserInfoService {
     @Autowired
     JwtUtil jwtUtil;
