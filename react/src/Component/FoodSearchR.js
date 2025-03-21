@@ -18,40 +18,37 @@ export default function FoodSearchR() {
 
   const [data, setData] = useState(null);
   const [foodNm, setFoodNm] = useState("");
+
+  // const [dietMemo, setDietMemo] = useState(""); // 메모 입력
   const [userid, setUserid] = useState("");
   const navigate = useNavigate();
-
-  const navigateMain = () => { navigate("/main"); };
-  const navigateToRecordBody = () => { navigate("/recordbody"); };
-  const navigateFood = () => { navigate("/Calender"); };
-  const navigateGraph = () => { navigate("/Graph"); };
+ 
+  const navigateMain = () => {navigate("/main");};
+  const navigateToRecordBody = () => {navigate("/recordbody");};
+  const navigateFood=() => {navigate("/Calender");};
+  const navigateGraph = () => {navigate("/Graph")};
 
   // 로그아웃 처리
   const handleLogout = async () => {
-    try {
-      const response = await fetch(`http://${config.SERVER_URL}/login/logout`, {
-        method: "POST",
-        credentials: "include",
-      });
+    await fetch(`http://${config.SERVER_URL}/login/logout`, {
+      method: "POST",
+      credentials: "include",
+    });
 
-      if (!response.ok) {
-        if (response.status === 404) {
-          navigate("/error/404");
-        } else if (response.status === 500) {
-          navigate("/error/500");
-        } else if (response.status === 503) {
-          navigate("/error/503");
-        } else {
-          throw new Error("로그아웃 실패");
-        }
-      } else {
-        sessionStorage.removeItem("useridRef");
-        navigate("/login");
+    sessionStorage.removeItem("useridRef");
+    navigate("/login");
+  };
+
+  // 쿠키에 JWT 존재 여부만 확인함
+  const getCookie = (name) => {
+    const cookieArr = document.cookie.split("; ");
+    for (let i = 0; i < cookieArr.length; i++) {
+      const cookiePair = cookieArr[i].split("=");
+      if (cookiePair[0] === name) {
+        return cookiePair[1];
       }
-    } catch (error) {
-      console.error("로그아웃 중 오류 발생:", error);
-      navigate("/error/500");
     }
+    return null;
   };
 
   useEffect(() => {
@@ -61,17 +58,7 @@ export default function FoodSearchR() {
       credentials: "include",
     })
       .then((response) => {
-        if (!response.ok) {
-          if (response.status === 404) {
-            navigate("/error/404");
-          } else if (response.status === 500) {
-            navigate("/error/500");
-          } else if (response.status === 503) {
-            navigate("/error/503");
-          } else {
-            throw new Error("Unauthorized");
-          }
-        }
+        if (!response.ok) throw new Error("Unauthorized");
         return response.json();
       })
       .then((data) => {
@@ -89,34 +76,22 @@ export default function FoodSearchR() {
     if (foodNm) {
       fetch(`http://${config.SERVER_URL}/food/foodname/${foodNm}`, {
         method: "GET",
-        credentials: "include",
+        credentials: "include", // 쿠키 포함 요청
       })
-        .then((response) => {
-          if (!response.ok) {
-            if (response.status === 404) {
-              navigate("/error/404");
-            } else if (response.status === 500) {
-              navigate("/error/500");
-            } else if (response.status === 503) {
-              navigate("/error/503");
-            } else {
-              throw new Error("음식 검색 실패");
-            }
-          }
-          return response.json();
-        })
+        .then((response) => response.json())
         .then((data) => setData(data))
-        .catch((error) => {
-          console.error("Error fetching data:", error);
-          alert("음식 검색 중 오류가 발생했습니다.");
-        });
-    } else {
-      alert("음식 이름을 입력하세요.");
+        .catch((error) => console.error("Error fetching data:", error));
     }
+    console.log(data);
   };
 
   // 음식 선택 후 저장 API 호출
   const handleButtonClick = (item) => {
+    // if (!selectedDate) {
+    //   alert("날짜를 선택하세요!");
+    //   return;
+    // }
+
     const foodData = {
       ...item,
       userid,
@@ -128,34 +103,18 @@ export default function FoodSearchR() {
 
     fetch(`http://${config.SERVER_URL}/food/saveFoodRecord`, {
       method: "POST",
-      credentials: "include",
+      credentials: "include", // 쿠키 포함 요청
       headers: {
         "Content-Type": "application/json",
       },
       body: JSON.stringify(foodData),
     })
-      .then((response) => {
-        if (!response.ok) {
-          if (response.status === 404) {
-            navigate("/error/404");
-          } else if (response.status === 500) {
-            navigate("/error/500");
-          } else if (response.status === 503) {
-            navigate("/error/503");
-          } else {
-            throw new Error("음식 기록 저장 실패");
-          }
-        }
-        return response.text();
-      })
+      .then((response) => response.text()) // JSON 형식이 아니라면 .json() 대신 .text() 사용
       .then((data) => {
         console.log("서버 응답:", data);
         alert(data); // 성공 메시지 출력
       })
-      .catch((error) => {
-        console.error("Error:", error);
-        alert("음식 기록 저장 중 오류가 발생했습니다.");
-      });
+      .catch((error) => console.error("Error:", error));
   };
 
   return (
@@ -163,27 +122,34 @@ export default function FoodSearchR() {
       <img src="/image/black.png" alt="Background" className={styles.MainImage} />
       <a className={styles.maintitle}>FitEnd</a>
       <div className={styles.food_container}>
-        <h2>날짜: {formattedSelectedDate}</h2>
+        {/* <h2>날짜: {formattedSelectedDate}</h2>
         <h2>식사 유형: {formattedMealType === "moning" ? "아침" : formattedMealType === "lunch" ? "점심" : formattedMealType === "dinner" ? "저녁" : "디저트"}</h2>
-        <h2>음식 검색</h2>
-        <input
-          type="text"
-          value={foodNm}
-          onChange={(e) => setFoodNm(e.target.value)}
-          placeholder="Enter food name"
-        />
-        <button onClick={fetchData}>Search</button>
+        <h2>음식 검색</h2> */}
+        <div className={styles.inputContainer}>
+          <input
+            type="text"
+            value={foodNm}
+            onChange={(e) => setFoodNm(e.target.value)}
+            placeholder="Enter food name"
+            className={styles.fullWidthInput}
+          />
+          <button onClick={fetchData} className={styles.searchButton}>
+            <img src="/image/foodlist/secach_button.png" alt="Search" className={styles.searchButtonImage} />
+          </button>
+        </div>
+
         {data ? (
-          <div>
+          <div className={styles.food_list}>
             {data.map((item, index) => (
-              <button key={index} onClick={() => handleButtonClick(item)}>
+              <button key={index} onClick={() => handleButtonClick(item)} className={styles.foodItem}>
                 {item.foodNm} {item.mfrNm}
               </button>
             ))}
           </div>
         ) : (
-          <p>음식을 검색하세요...</p>
+          <p>No Data...</p>
         )}
+
 
         <div className={styles.button_container}>
           {[

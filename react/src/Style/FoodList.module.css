@@ -63,6 +63,80 @@ body, html {
   color: white;
 }
 
+.food_list{
+  max-height: 500px;
+  overflow-y: auto;
+  text-align: left;
+  display: flex;
+  flex-direction: column;
+  background: transparent;
+  border: none;
+  padding: 5px;
+}
+
+.foodItem{
+  width: 100%;
+  text-align: left;
+  background: rgba(255, 255, 255, 0.2);
+  border: none;
+  padding: 10px;
+  cursor: pointer;
+  color: white;
+
+  scrollbar-width: thin;
+  scrollbar-color: #C9F439 rgba(255, 255, 255, 0.2);
+}
+
+.food_list::-webkit-scrollbar {
+  width: 8px; /* 스크롤바 너비 */
+}
+
+.food_list::-webkit-scrollbar-track {
+  background: rgba(255, 255, 255, 0.2); /* 스크롤바 배경 */
+  border-radius: 10px;
+}
+
+.food_list::-webkit-scrollbar-thumb {
+  background: #C9F439; /* 스크롤바 움직이는 부분 */
+  border-radius: 10px;
+}
+
+.food_list::-webkit-scrollbar-thumb:hover {
+  background: #b8e02f; /* 호버 시 색상 변경 */
+}
+
+.fullWidthInput{
+  width: 350px;
+  border-radius: 5px;
+  padding: 5px;
+  background-color: transparent;
+  border-color: #C9F439;
+  color: white;
+  box-sizing: border-box;
+}
+
+.inputContainer {
+  position: relative;
+  width: 100%;
+}
+
+.searchButton {
+  position: absolute;
+  top: 50%;
+  right: 10px; /* 버튼 위치 조정 */
+  transform: translateY(-50%);
+  background: none;
+  border: none;
+  cursor: pointer;
+  padding: 0;
+}
+
+.searchButtonImage {
+  width: 24px; /* 원하는 크기로 조절 */
+  height: 24px;
+}
+
+
 .button_container {
   display: flex;
   justify-content: space-evenly;
