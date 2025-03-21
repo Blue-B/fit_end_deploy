@@ -219,7 +219,7 @@ public class SaveRawFood {
                 CSVReader csvReader = new CSVReader(reader)) {
 
             // 헤더 건너뛰기
-            String[] header = csvReader.readNext();
+            csvReader.readNext();
 
             String[] line;
             while ((line = csvReader.readNext()) != null) {
