@@ -147,7 +147,7 @@ body, html {
 /* 선택된 날짜 정보 박스 */
 .selected-date-container {
   width: 300px;
-  height: 70px;
+  height: 100px;
   margin-top: 16px;
   padding: 12px;
   border-radius: 10px;
