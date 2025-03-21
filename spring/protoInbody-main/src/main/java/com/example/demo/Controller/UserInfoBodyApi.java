@@ -62,16 +62,20 @@ public class UserInfoBodyApi {
         @Operation(summary = "남성 스코어 랭킹 조회", description = "남성 사용자의 스코어 랭킹 정보를 조회합니다.", responses = {
                         @ApiResponse(responseCode = "200", description = "남성 스코어 랭킹 조회 성공")
         })
-        @GetMapping("/scorerankmale") // 남성 스코어 랭킹 조회
-        public ResponseEntity<?> getScoreRankMale() {
-                return ResponseEntity.ok(ScoreRankService.showRankMale1());
+        @GetMapping("/scorerankmale/{userid}") // 남성 스코어 랭킹 조회
+        public ResponseEntity<?> getScoreRankMale(@PathVariable String userid) {
+                int age = UserBodyInfoService.findAge(userid);
+
+                return ResponseEntity.ok(ScoreRankService.showRankMale1(age));
         }
 
         @Operation(summary = "여성 스코어 랭킹 조회", description = "여성 사용자의 스코어 랭킹 정보를 조회합니다.", responses = {
                         @ApiResponse(responseCode = "200", description = "여성 스코어 랭킹 조회 성공")
         })
-        @GetMapping("/scorerankfemale") // 여성 스코어 랭킹 조회
-        public ResponseEntity<?> getScoreRankFemale() {
-                return ResponseEntity.ok(ScoreRankService.showRankFemale());
+        @GetMapping("/scorerankfemale/{userid}") // 여성 스코어 랭킹 조회
+        public ResponseEntity<?> getScoreRankFemale(@PathVariable String userid) {
+                int age = UserBodyInfoService.findAge(userid);
+
+                return ResponseEntity.ok(ScoreRankService.showRankFemale(age));
         }
 }
