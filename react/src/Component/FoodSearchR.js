@@ -122,9 +122,6 @@ export default function FoodSearchR() {
       <img src="/image/black.png" alt="Background" className={styles.MainImage} />
       <a className={styles.maintitle}>FitEnd</a>
       <div className={styles.food_container}>
-        {/* <h2>날짜: {formattedSelectedDate}</h2>
-        <h2>식사 유형: {formattedMealType === "moning" ? "아침" : formattedMealType === "lunch" ? "점심" : formattedMealType === "dinner" ? "저녁" : "디저트"}</h2>
-        <h2>음식 검색</h2> */}
         <div className={styles.inputContainer}>
           <input
             type="text"
@@ -147,7 +144,7 @@ export default function FoodSearchR() {
             ))}
           </div>
         ) : (
-          <p>No Data...</p>
+          <p>Search Example: 옥수수</p>
         )}
 
 

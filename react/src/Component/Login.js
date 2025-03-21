@@ -4,17 +4,20 @@ import config from "../config";
 import styles from "../Style/login.module.css";
 
 export default function Login() {
-  const [userid, setUserId] = useState("");
-  const [password, setPassword] = useState("");
-  const [errorMessage, setErrorMessage] = useState("");
-  const navigate = useNavigate();
+  //로그인 입력값 상태 관리리
+  const [userid, setUserId] = useState(""); // 사용자 ID
+  const [password, setPassword] = useState(""); // 비밀번호
+  const [errorMessage, setErrorMessage] = useState(""); // 에러 메세지 표시용
+  const navigate = useNavigate(); // 페이지 이동용 훅
 
+  // 회원가입 페이지 이동
   const navigateToRegister = () => {
     navigate('/register');
   };
 
+  // 로그인 폼 제출 시 실행되는 함수
   const handleSubmit = async (event) => {
-    event.preventDefault();
+    event.preventDefault(); // 기본 폼 제출 동작 방지
 
     const userInfo = {
       userid,
@@ -22,13 +25,14 @@ export default function Login() {
     };
 
     try {
+      // 서버에 로그인 요청 보내기
       const response = await fetch(`http://${config.SERVER_URL}/login/login`, {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
         },
-        credentials: "include",
-        body: JSON.stringify(userInfo),
+        credentials: "include", // 쿠키 포함 전송
+        body: JSON.stringify(userInfo), // 입력값을 JSON 형태로 변환하여 전송
       });
 
       if (!response.ok) {
@@ -70,7 +74,7 @@ export default function Login() {
         {errorMessage && <p style={{ color: "red" }}>{errorMessage}</p>} {/* 로그인 5회 실패시 에러메세지 p태그로 반환 */}
         <form onSubmit={handleSubmit}>
           <div>
-            <label className={styles["USERLOGINID_EMAIL"]}>EMAIL</label>
+            <label className={styles["USERLOGINID_EMAIL"]}>ID</label>
             <input
               className={styles.INPUTTEXT1}
               type="text"

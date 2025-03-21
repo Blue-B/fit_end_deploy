@@ -5,19 +5,20 @@ import styles from "../Style/graph.module.css";
 import { LineChart, Line, XAxis, YAxis, CartesianGrid, Tooltip, Legend, ResponsiveContainer } from 'recharts';
 
 export default function Graph() {
-  const useridRef = useRef(sessionStorage.getItem("userid"));
+  const useridRef = useRef(sessionStorage.getItem("userid"));// 유저 ID를 세션에서 가져와 저장함
   const navigate = useNavigate();
-  const [bodyrecod, setBodyRecod] = useState([]);
-  const [loading, setLoading] = useState(true);
 
-  // 누적된 BMI 데이터와 오늘의 BMI 상태 관리
-  const [bmiData, setBmiData] = useState([]);
+  const [bodyrecod, setBodyRecod] = useState([]);// 유저 신체 기록 데이터 상태
+  const [loading, setLoading] = useState(true); // 로딩 상태
+  const [bmiData, setBmiData] = useState([]); // BMI 그래프에 사용할 데이터 상태
 
+  // 페이지 이동 함수
   const navigateMain = () => { navigate("/main"); };
   const navigateToRecordBody = () => { navigate("/recordbody"); };
   const navigateCalender = () => { navigate("/Calender"); };
   const navigateRank = () => { navigate("/rank"); };
 
+  // 로그아웃 핸들러
   const handleLogout = async () => {
     try {
       const response = await fetch(`http://${config.SERVER_URL}/login/logout`, {
@@ -25,6 +26,7 @@ export default function Graph() {
         credentials: "include",
       });
 
+      // 오류 코드에 따른 에러 페이지 이동
       if (!response.ok) {
         if (response.status === 404) {
           navigate("/error/404");
@@ -36,6 +38,7 @@ export default function Graph() {
           throw new Error("로그아웃 실패");
         }
       } else {
+        // 세션 정보 삭제후 로그인 페이지 이동
         sessionStorage.removeItem("userid");
         navigate("/login");
       }
@@ -45,6 +48,7 @@ export default function Graph() {
     }
   };
 
+  // 컴포넌트 마운트시 사용자 인증 및 데이터 가져오기
   useEffect(() => {
     fetch(`http://${config.SERVER_URL}/login/validate`, {
       method: "GET",
@@ -102,6 +106,7 @@ export default function Graph() {
       });
   }, [navigate]);
 
+  // 신체 기록이 없는 경우 5초 뒤 기록 페이지 이동
   useEffect(() => {
     if (bodyrecod.length === 0) {
       const timer = setTimeout(() => {
@@ -111,7 +116,7 @@ export default function Graph() {
     }
   }, [bodyrecod, navigateToRecordBody]);
 
-  // 누적된 BMI 데이터와 오늘의 BMI 데이터를 업데이트
+  // BMi 데이터를 가공하여 그래프용 데이터 생성
   useEffect(() => {
     if (bodyrecod.length > 0) {
       const newBmiData = [
@@ -124,10 +129,12 @@ export default function Graph() {
     }
   }, [bodyrecod]);
 
+  // 로딩 중일 때 표시
   if (loading) {
     return <p>📡 데이터를 불러오는 중입니다...</p>;
   }
 
+  // 신체 기록이 없을 경우 안내 메세지
   if (bodyrecod.length === 0 || bodyrecod[0] == null) {
     return (
       <div>
