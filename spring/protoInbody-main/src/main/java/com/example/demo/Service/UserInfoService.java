@@ -1,6 +1,9 @@
 package com.example.demo.Service;
 
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
+
+import java.util.Date;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import com.example.demo.DTO.UserInfoDTO;
@@ -39,11 +42,18 @@ public class UserInfoService {
             throw new RuntimeException("사용자를 찾을 수 없습니다.");
         }
 
-        boolean isTokenExpired = true;
+        boolean isTokenExpired = false;
 
-        if (userInfo.getJwt() != null) {
+        if (userInfo.getJwt() != null && !userInfo.getJwt().isEmpty()) {
             try {
+                Date issuedAt = jwtUtil.getIssuedAtDateFromToken(userInfo.getJwt());
+                Date expirationDate = jwtUtil.getExpirationDateFromToken(userInfo.getJwt());
+
+                System.out.println("토큰 생성 시간: " + issuedAt);
+                System.out.println("토큰 만료 시간: " + expirationDate);
+
                 isTokenExpired = jwtUtil.isTokenExpired(userInfo.getJwt());
+                System.out.println("토큰 만료 여부: " + isTokenExpired);
             } catch (io.jsonwebtoken.ExpiredJwtException e) {
                 // 토큰이 만료되었을 때 예외가 발생하면 여기서 처리
                 System.out.println("토큰이 만료되었습니다: " + e.getMessage());
@@ -56,7 +66,7 @@ public class UserInfoService {
         }
 
         if (userInfo.getJwt() == null || isTokenExpired) {
-            String jwt = jwtUtil.generateToken(UserInfoDTO.getUserid(), 1);
+            String jwt = jwtUtil.generateToken(UserInfoDTO.getUserid(), 24);
             System.out.println(jwt + "갱신");
             userInfo.setJwt(jwt);
             RepoUserInfo.save(userInfo);
