@@ -110,4 +110,12 @@ public class UserBodyInfoService {
         return UserInfo.getSex();
 
     }
+
+    public int findAge(String userid) {
+        UserInfo UserInfo = RepoUserInfo.findByUserid(userid);
+        calAge(UserInfo.getBirth());
+        return calAge(UserInfo.getBirth());
+
+    }
+
 }
