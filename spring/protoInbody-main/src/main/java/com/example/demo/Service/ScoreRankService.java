@@ -18,16 +18,19 @@ public class ScoreRankService {
     private RepoUserBodyInfo RepoUserBodyInfo;
 
     // 남성쪽 점수랭킹
-    public List<UserBodyInfoDTO> showRankMale1() {
-        List<UserBodyInfo> UserBodyInfo = RepoUserBodyInfo.findLatestMaleScores();
+    public List<UserBodyInfoDTO> showRankMale1(int age) {
+        System.out.println(age);
+        List<UserBodyInfo> UserBodyInfo = RepoUserBodyInfo.findLatestMaleScores(age);
         return UserBodyInfo.stream()
                 .map(userBodyInfo -> new UserBodyInfoDTO(userBodyInfo))
                 .collect(Collectors.toList());
     }
 
     // 여성쪽 점수랭킹
-    public List<UserBodyInfoDTO> showRankFemale() {
-        List<UserBodyInfo> UserBodyInfo = RepoUserBodyInfo.findLatestFemaleScores();
+    public List<UserBodyInfoDTO> showRankFemale(int age) {
+        System.out.println(age);
+
+        List<UserBodyInfo> UserBodyInfo = RepoUserBodyInfo.findLatestFemaleScores(age);
         return UserBodyInfo.stream()
                 .map(userBodyInfo -> new UserBodyInfoDTO(userBodyInfo))
                 .collect(Collectors.toList());
