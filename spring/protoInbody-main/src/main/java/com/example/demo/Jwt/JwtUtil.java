@@ -87,4 +87,18 @@ public class JwtUtil {
         }
         return null; // 유효하지 않으면 null 반환
     }
+
+    public Date getIssuedAtDateFromToken(String token) {
+        return getClaimFromToken(token, Claims::getIssuedAt);
+    }
+
+    public Date getExpirationDateFromToken(String token) {
+        return getClaimFromToken(token, Claims::getExpiration);
+    }
+
+    private <T> T getClaimFromToken(String token, java.util.function.Function<Claims, T> claimsResolver) {
+        final Claims claims = extractClaims(token);
+        return claimsResolver.apply(claims);
+    }
+
 }
