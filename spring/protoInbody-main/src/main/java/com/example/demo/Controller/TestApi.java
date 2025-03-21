@@ -33,7 +33,7 @@ import io.swagger.v3.oas.annotations.Parameter;
 import io.swagger.v3.oas.annotations.media.Content;
 import io.swagger.v3.oas.annotations.media.Schema;
 
-@RestController // 공공 api 보내는 컨트롤러
+@RestController // rest api 보내는 컨트롤러
 @RequestMapping("/api")
 public class TestApi {
     @Autowired
@@ -84,7 +84,7 @@ public class TestApi {
         return items.subList(start, end);
     }
 
-    @GetMapping("/data")
+    @GetMapping("/data") // 음식 데이터 보내는거
     @Operation(summary = "RawFood 데이터 조회", description = "JWT를 검증한 후 조건에 맞는 RawFood 데이터를 검색 및 페이징 처리하여 반환합니다.", responses = {
             @ApiResponse(responseCode = "200", description = "데이터 조회 성공", content = @Content(schema = @Schema(implementation = RawFood.class))),
             @ApiResponse(responseCode = "401", description = "JWT 검증 실패", content = @Content),
@@ -122,7 +122,7 @@ public class TestApi {
         });
     }
 
-    @GetMapping("/body")
+    @GetMapping("/body") // 신체 데이터 보내는거
     @Operation(summary = "User Body Info 데이터 조회", description = "JWT를 검증한 후 조건에 맞는 사용자 신체 정보 데이터를 검색 및 페이징 처리하여 반환합니다.", responses = {
             @ApiResponse(responseCode = "200", description = "데이터 조회 성공", content = @Content(schema = @Schema(implementation = UserBodyInfoDTO.class))),
             @ApiResponse(responseCode = "401", description = "JWT 검증 실패", content = @Content),

@@ -15,7 +15,7 @@ import com.example.demo.DTO.UserInfoDTO;
 import com.example.demo.Entity.UserInfo;
 import com.example.demo.Repo.RepoUserInfo;
 
-@Service
+@Service // 로그인 및 보안 관련 서비스
 public class LoginAttemptService {
     private final int MAX_ATTEMPTS = 5; // 최대 로그인 시도 횟수
     private final long BLOCK_DURATION = 5 * 60; // 5분 (초 단위)

@@ -15,7 +15,7 @@ import com.example.demo.Repo.RepoUserBodyInfo;
 import com.example.demo.Repo.RepoUserInfo;
 import com.example.demo.Service.Utile.ConversionService;
 
-@Service
+@Service // 유저 신체기반 서비스
 public class UserBodyInfoService {
 
     @Autowired

@@ -11,7 +11,7 @@ import org.springframework.stereotype.Service;
 import com.example.demo.DTO.UserBodyInfoDTO;
 import com.example.demo.Entity.UserBodyInfo;
 
-@Service
+@Service // 스코어 랭킹 관련 서비스
 public class ScoreRankService {
 
     @Autowired

@@ -59,7 +59,7 @@ public class UserInfoBodyApi {
                 return ResponseEntity.ok(records);
         }
 
-        @Operation(summary = "남성 스코어 랭킹 조회", description = "남성 사용자의 스코어 랭킹 정보를 조회합니다.", responses = {
+        @Operation(summary = "남성 스코어 랭킹 조회", description = "사용자의 나이의 남성 스코어 랭킹 정보를 조회합니다.", responses = {
                         @ApiResponse(responseCode = "200", description = "남성 스코어 랭킹 조회 성공")
         })
         @GetMapping("/scorerankmale/{userid}") // 남성 스코어 랭킹 조회
@@ -69,7 +69,7 @@ public class UserInfoBodyApi {
                 return ResponseEntity.ok(ScoreRankService.showRankMale1(age));
         }
 
-        @Operation(summary = "여성 스코어 랭킹 조회", description = "여성 사용자의 스코어 랭킹 정보를 조회합니다.", responses = {
+        @Operation(summary = "여성 스코어 랭킹 조회", description = "사용자의 나이의 여성 스코어 랭킹 정보를 조회합니다.", responses = {
                         @ApiResponse(responseCode = "200", description = "여성 스코어 랭킹 조회 성공")
         })
         @GetMapping("/scorerankfemale/{userid}") // 여성 스코어 랭킹 조회
