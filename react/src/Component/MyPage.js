@@ -5,6 +5,7 @@ import styles from "../Style/myPage.module.css";
 
 const MyPage = () => {
   const navigate = useNavigate();
+
   const [userInfo, setUserInfo] = useState({
     userid: "",
     email: "",
@@ -25,46 +26,46 @@ const MyPage = () => {
   const navigateGraph = () => navigate("/Graph");
   const navigateMyPage = () => navigate("/MyPage");
 
-  useEffect(() => {
-    // JWT 토큰 생성 함수 정의
-    // JWT 생성 함수
-    async function generationJwt() {
-      try {
-        // 백엔드에 POST 요청을 전송하여 JWT 생성 요청
-        const response = await fetch(
-          `http://${config.SERVER_URL}/userinfo/generation`,
-          {
-            method: "POST", // POST 요청
-            credentials: "include", // 인증 정보(쿠키) 포함
-            headers: { "Content-Type": "application/json" }, // JSON 타입 명시
-            body: JSON.stringify({ userid: useridRef.current }), // 요청 바디에 userid 포함
-          }
-        );
-
-        // 응답 실패시 예외 처리
-        if (!response.ok) {
-          if (response.status === 404) {
-            navigate("/error/404");
-          } else if (response.status === 500) {
-            navigate("/error/500");
-          } else if (response.status === 503) {
-            navigate("/error/503");
-          } else {
-            setError("JWT 생성 실패! 다시 시도해주세요.");
-          }
-          return;
+  const generationJwt = async () => {
+    try {
+      // 백엔드에 POST 요청을 전송하여 JWT 생성 요청
+      const response = await fetch(
+        `http://${config.SERVER_URL}/userinfo/generation`,
+        {
+          method: "POST",
+          credentials: "include",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({ userid: useridRef.current }),
         }
+      );
 
-        // JWT 토큰을 텍스트로 추출후 상태에 저장
-        const token = await response.text();
-        setJwtString(token);
-        console.log("Received JWT:", token); // 콘솔로 확인
-      } catch (error) {
-        console.error("JWT 생성 중 에러 발생:", error);
-        navigate("/error/500");
+      // 응답 실패시 예외 처리
+      if (!response.ok) {
+        if (response.status === 404) {
+          navigate("/error/404");
+        } else if (response.status === 500) {
+          navigate("/error/500");
+        } else if (response.status === 503) {
+          navigate("/error/503");
+        } else {
+          setError("JWT 생성 실패! 다시 시도해주세요.");
+        }
+        return;
       }
+
+      // JWT 토큰을 텍스트로 추출후 상태에 저장
+      const token = await response.text();
+      setJwtString(token);
+      console.log("Received JWT:", token); // 콘솔로 확인
+    } catch (error) {
+      console.error("JWT 생성 중 에러 발생:", error);
+      navigate("/error/500");
     }
-    generationJwt(); // 함수 실행
+  };
+
+  useEffect(() => {
+    // 컴포넌트 마운트 시 실행
+    generationJwt();
   }, [navigate]);
 
   // 사용자 정보 가져오기
@@ -155,9 +156,12 @@ const MyPage = () => {
             <p className={styles.apiKeyText}>
               {jwtString ? jwtString : "API 키 로딩 중..."}
             </p>
-            {/* <button onClick={} className={styles.apiButton}>
+            <button
+              onClick={() => generationJwt()}
+              className={styles.apiButton}
+            >
               API 재발급
-            </button> */}
+            </button>
           </div>
         </div>
 
