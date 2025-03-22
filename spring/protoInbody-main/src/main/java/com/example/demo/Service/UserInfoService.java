@@ -100,4 +100,11 @@ public class UserInfoService {
 
     }
 
+    public UserInfoDTO myPage(String userid) {
+
+        UserInfo UserInfo = RepoUserInfo.findByUserid(userid);
+        UserInfoDTO UserInfoDTO = EntityConversionService.convertToDto(UserInfo, UserInfoDTO.class);
+        return UserInfoDTO;
+    }
+
 }

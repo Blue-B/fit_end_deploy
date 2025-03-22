@@ -15,6 +15,7 @@ export default function TodoCalender() {
   const navigateToRecordBody = () => navigate("/recodbody");
   const navigateFood = () => navigate("/FoodSearchR");
   const navigateGraph = () => navigate("/Graph");
+  const navigateMyPage = () => navigate("/MyPage");
 
   // 로그아웃 처리
   const handleLogout = async () => {
@@ -74,11 +75,14 @@ export default function TodoCalender() {
       .then((data) => {
         setUserid(data.userid);
 
-        return fetch(`http://${config.SERVER_URL}/food/diet-records/${data.userid}`, {
-          method: "GET",
-          credentials: "include",
-          headers: { "Content-Type": "application/json" },
-        });
+        return fetch(
+          `http://${config.SERVER_URL}/food/diet-records/${data.userid}`,
+          {
+            method: "GET",
+            credentials: "include",
+            headers: { "Content-Type": "application/json" },
+          }
+        );
       })
       .then((response) => {
         if (!response.ok) {
@@ -98,8 +102,13 @@ export default function TodoCalender() {
         setUserData(data);
 
         // 데이터가 있는 날짜만 저장 & 최신순 정렬
-        const dates = [...new Set(data.map((record) => new Date(record.timestamp).toISOString().split("T")[0]))]
-          .sort((a, b) => new Date(b) - new Date(a)); // 최신순 정렬
+        const dates = [
+          ...new Set(
+            data.map(
+              (record) => new Date(record.timestamp).toISOString().split("T")[0]
+            )
+          ),
+        ].sort((a, b) => new Date(b) - new Date(a)); // 최신순 정렬
 
         setAvailableDates(dates);
         setSelectedDate(dates[0] || getTodayDate()); // 최신 날짜 선택 (없으면 오늘 날짜)
@@ -146,7 +155,12 @@ export default function TodoCalender() {
           filteredData.map((record, index) => (
             <div key={index} className="diet-record">
               <p>📌 식사: {record.dietMemo || "메모 없음"}</p>
-              <p>📅 날짜: {record.timestamp ? new Date(record.timestamp).toLocaleDateString("ko-KR") : "날짜 없음"}</p>
+              <p>
+                📅 날짜:{" "}
+                {record.timestamp
+                  ? new Date(record.timestamp).toLocaleDateString("ko-KR")
+                  : "날짜 없음"}
+              </p>
               <p>🍽️ 음식: {record.foodNm || "음식 없음"}</p>
               <p>🔥 칼로리: {record.enerc || 0} kcal</p>
               <p>💪 단백질: {record.prot || 0}g</p>
@@ -167,13 +181,38 @@ export default function TodoCalender() {
       <div className="button-container">
         {[
           { img: "HOME.png", alt: "Main", action: navigateMain, label: "Main" },
-          { img: "PAPAR.png", alt: "Paper", action: navigateToRecordBody, label: "Paper" },
-          { img: "Vector7.png", alt: "Graph", action: navigateGraph, label: "Graph" },
-          { img: "Vector8.png", alt: "Food", action: navigateFood, label: "Food" },
-          { img: "PEOPLE.png", alt: "Logout", action: handleLogout, label: "Logout" },
+          {
+            img: "PAPAR.png",
+            alt: "Paper",
+            action: navigateToRecordBody,
+            label: "Paper",
+          },
+          {
+            img: "Vector7.png",
+            alt: "Graph",
+            action: navigateGraph,
+            label: "Graph",
+          },
+          {
+            img: "Vector8.png",
+            alt: "Food",
+            action: navigateFood,
+            label: "Food",
+          },
+          {
+            img: "PEOPLE.png",
+            alt: "Logout",
+            action: navigateMyPage,
+            label: "<Mypage>",
+          },
         ].map(({ img, alt, action, label }, idx) => (
           <div key={idx} className="button-item">
-            <img src={`/image/${img}`} alt={alt} className="buttonimage" onClick={action} />
+            <img
+              src={`/image/${img}`}
+              alt={alt}
+              className="buttonimage"
+              onClick={action}
+            />
             <span className="span">{label}</span>
           </div>
         ))}

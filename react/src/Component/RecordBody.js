@@ -24,6 +24,7 @@ export default function RecordBody() {
   const navigateGraph = () => {
     navigate("/Graph");
   };
+  const navigateMyPage = () => navigate("/MyPage");
 
   // 로그아웃 처리
   const handleLogout = async () => {
@@ -96,14 +97,17 @@ export default function RecordBody() {
     console.log("📌 보내는 데이터:", userBodyInfo);
 
     try {
-      const response = await fetch(`http://${config.SERVER_URL}/userinfobody/recorduserbody`, {
-        method: "POST",
-        credentials: "include",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify(userBodyInfo),
-      });
+      const response = await fetch(
+        `http://${config.SERVER_URL}/userinfobody/recorduserbody`,
+        {
+          method: "POST",
+          credentials: "include",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify(userBodyInfo),
+        }
+      );
 
       if (!response.ok) {
         if (response.status === 404) {
@@ -133,7 +137,11 @@ export default function RecordBody() {
         alt="backgroundimage"
         className={styles["RecordBodyImage"]}
       />
-      <img src="/image/Rectangle22.png" alt="backgroudvector" className={styles["RecordBodyvector"]} />
+      <img
+        src="/image/Rectangle22.png"
+        alt="backgroudvector"
+        className={styles["RecordBodyvector"]}
+      />
       <a className={styles["RecordBodyTitle"]}>FitEnd</a>
       <h2 className={styles["RecordBody_Title"]}>
         {selectedSex === "1"
@@ -226,9 +234,9 @@ export default function RecordBody() {
             src="/image/PEOPLE.png"
             alt="Logout"
             className={styles["ButtonImage"]}
-            onClick={handleLogout}
+            onClick={navigateMyPage}
           />
-          <span className={styles["Span"]}>Logout</span>
+          <span className={styles["Span"]}>Mypage</span>
         </div>
       </div>
     </div>

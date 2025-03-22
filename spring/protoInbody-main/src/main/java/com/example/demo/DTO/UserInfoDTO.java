@@ -123,4 +123,10 @@ public class UserInfoDTO implements HasUserId {
         this.jwt = jwt;
     }
 
+    @Override
+    public String toString() {
+        return "UserInfoDTO [id=" + id + ", userid=" + userid + ", password=" + password + ", email=" + email + ", sex="
+                + sex + ", region1=" + region1 + ", region2=" + region2 + ", birth=" + birth + ", jwt=" + jwt + "]";
+    }
+
 }
