@@ -260,7 +260,7 @@ body, html {
   gap: clamp(10px, 10vw, 50px);
   position: absolute;
   top: min(300px, 20vh); /* 기본적으로 너무 내려가지 않도록 조정 */
-  left: 43%;
+  /*left: 43%;*/
   transform: translateX(-50%);
   width: 80%; 
   height: clamp(80px, 20vh, 120px);

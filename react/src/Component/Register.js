@@ -281,7 +281,7 @@ export default function Register() {
         <div className={styles["중복체크"]}>
           <button
             type="button"
-            className={styles["추후수정 요망"]}
+            className={styles["CITY_Button"]}
             onClick={checkUseridEmail}
           >
             아이디/이메일 중복 체크
