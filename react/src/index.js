@@ -14,7 +14,7 @@ import ClickThis from "./Component/ClickThis";
 import FoodSearchR from "./Component/FoodSearchR";
 import MealTimingselect from "./Component/MealTimingselect";
 import MealCalender from "./Component/MealCalender";
-import ApiHandlerPage from "./Component/ApiHandlerPage";
+import MyPage from "./Component/MyPage";
 
 import Error404 from "./Component/Error404";
 import Error500 from "./Component/Error500";
@@ -37,7 +37,7 @@ const App = () => {
         <Route path="/FoodSearchR" element={<FoodSearchR />} />
         <Route path="/MealTimingselect" element={<MealTimingselect />} />
         <Route path="/Calender" element={<MealCalender />} />
-        <Route path="/api" element={<ApiHandlerPage />} />
+        <Route path="/MyPage" element={<MyPage />} />
         <Route path="/error/404" element={<Error404 />} />
         <Route path="/error/500" element={<Error500 />} />
         <Route path="/error/503" element={<Error503 />} />

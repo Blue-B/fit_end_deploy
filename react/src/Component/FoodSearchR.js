@@ -22,11 +22,20 @@ export default function FoodSearchR() {
   // const [dietMemo, setDietMemo] = useState(""); // 메모 입력
   const [userid, setUserid] = useState("");
   const navigate = useNavigate();
- 
-  const navigateMain = () => {navigate("/main");};
-  const navigateToRecordBody = () => {navigate("/recordbody");};
-  const navigateFood=() => {navigate("/Calender");};
-  const navigateGraph = () => {navigate("/Graph")};
+
+  const navigateMain = () => {
+    navigate("/main");
+  };
+  const navigateToRecordBody = () => {
+    navigate("/recordbody");
+  };
+  const navigateFood = () => {
+    navigate("/Calender");
+  };
+  const navigateGraph = () => {
+    navigate("/Graph");
+  };
+  const navigateMyPage = () => navigate("/MyPage");
 
   // 로그아웃 처리
   const handleLogout = async () => {
@@ -119,7 +128,11 @@ export default function FoodSearchR() {
 
   return (
     <div className={styles.Main_Container}>
-      <img src="/image/black.png" alt="Background" className={styles.MainImage} />
+      <img
+        src="/image/black.png"
+        alt="Background"
+        className={styles.MainImage}
+      />
       <a className={styles.maintitle}>FitEnd</a>
       <div className={styles.food_container}>
         <div className={styles.inputContainer}>
@@ -131,14 +144,22 @@ export default function FoodSearchR() {
             className={styles.fullWidthInput}
           />
           <button onClick={fetchData} className={styles.searchButton}>
-            <img src="/image/foodlist/secach_button.png" alt="Search" className={styles.searchButtonImage} />
+            <img
+              src="/image/foodlist/secach_button.png"
+              alt="Search"
+              className={styles.searchButtonImage}
+            />
           </button>
         </div>
 
         {data ? (
           <div className={styles.food_list}>
             {data.map((item, index) => (
-              <button key={index} onClick={() => handleButtonClick(item)} className={styles.foodItem}>
+              <button
+                key={index}
+                onClick={() => handleButtonClick(item)}
+                className={styles.foodItem}
+              >
                 {item.foodNm} {item.mfrNm}
               </button>
             ))}
@@ -147,17 +168,46 @@ export default function FoodSearchR() {
           <p>Search Example: 옥수수</p>
         )}
 
-
         <div className={styles.button_container}>
           {[
-            { img: "HOME.png", alt: "Main", action: navigateMain, label: "Main" },
-            { img: "PAPAR.png", alt: "Paper", action: navigateToRecordBody, label: "Paper" },
-            { img: "Vector7.png", alt: "Graph", action: navigateGraph, label: "Graph" },
-            { img: "Vector8.png", alt: "Food", action: navigateFood, label: "Food" },
-            { img: "PEOPLE.png", alt: "Logout", action: handleLogout, label: "Logout" },
+            {
+              img: "HOME.png",
+              alt: "Main",
+              action: navigateMain,
+              label: "Main",
+            },
+            {
+              img: "PAPAR.png",
+              alt: "Paper",
+              action: navigateToRecordBody,
+              label: "Paper",
+            },
+            {
+              img: "Vector7.png",
+              alt: "Graph",
+              action: navigateGraph,
+              label: "Graph",
+            },
+            {
+              img: "Vector8.png",
+              alt: "Food",
+              action: navigateFood,
+              label: "Food",
+            },
+            {
+              img: "PEOPLE.png",
+              alt: "Logout",
+              action: navigateMyPage,
+              label: "mypage",
+            },
           ].map(({ img, alt, action, label }, idx) => (
             <div key={idx} className={styles.button_item}>
-              <img src={`/image/${img}`} alt={alt} className={styles.buttonimage} onClick={action} />
+              <img
+                src={`/image/${img}`}
+                alt={alt}
+                className={styles.buttonimage}
+                onClick={action}
+              />
               <span className={styles.span}>{label}</span>
             </div>
           ))}

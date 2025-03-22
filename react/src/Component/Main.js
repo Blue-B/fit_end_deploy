@@ -22,6 +22,7 @@ export default function Main() {
   const navigateToRecordBody = () => navigate("/recordbody");
   const navigateCalender = () => navigate("/Calender");
   const navigateGraph = () => navigate("/Graph");
+  const navigateMyPage = () => navigate("/MyPage");
 
   const handleLogout = async () => {
     try {
@@ -62,7 +63,9 @@ export default function Main() {
   };
 
   const goToPrevious = () => {
-    setCurrentIndex((prevIndex) => (prevIndex - 1 + images.length) % images.length);
+    setCurrentIndex(
+      (prevIndex) => (prevIndex - 1 + images.length) % images.length
+    );
   };
 
   const animation = useSpring({
@@ -80,14 +83,17 @@ export default function Main() {
   // JWT 생성 함수
   const generationJwt = async () => {
     try {
-      const response = await fetch(`http://${config.SERVER_URL}/userinfo/generation`, {
-        method: "POST",
-        credentials: "include",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify({ userid: useridRef.current }),
-      });
+      const response = await fetch(
+        `http://${config.SERVER_URL}/userinfo/generation`,
+        {
+          method: "POST",
+          credentials: "include",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify({ userid: useridRef.current }),
+        }
+      );
 
       if (!response.ok) {
         if (response.status === 404) {
@@ -133,11 +139,14 @@ export default function Main() {
         console.log("로그인 상태 확인 성공:", data);
         useridRef.current = data.userid;
         sessionStorage.setItem("userid", data.userid);
-        return fetch(`http://${config.SERVER_URL}/userinfobody/recentuserbody/${data.userid}`, {
-          method: "GET",
-          credentials: "include",
-          headers: { "Content-Type": "application/json" },
-        });
+        return fetch(
+          `http://${config.SERVER_URL}/userinfobody/recentuserbody/${data.userid}`,
+          {
+            method: "GET",
+            credentials: "include",
+            headers: { "Content-Type": "application/json" },
+          }
+        );
       })
       .then((response) => {
         if (!response.ok) {
@@ -167,43 +176,88 @@ export default function Main() {
   return (
     <div className={styles.Main_Container}>
       <a className={styles.maintitle}>FitEnd</a>
-      <img src="/image/black.png" alt="Background" className={styles.MainImage} />
+      <img
+        src="/image/black.png"
+        alt="Background"
+        className={styles.MainImage}
+      />
       <div className={styles["Central-Menu"]}>
         <div className={styles.anime_container} {...swipeHandlers}>
           <animated.div style={animation} className={styles.slide}>
             <img src={images[currentIndex]} alt="carousel" />
           </animated.div>
           <div className={styles.anime_controls}>
-            <button className={styles.prev} onClick={goToPrevious}>⟨</button>
-            <button className={styles.next} onClick={goToNext}>⟩</button>
+            <button className={styles.prev} onClick={goToPrevious}>
+              ⟨
+            </button>
+            <button className={styles.next} onClick={goToNext}>
+              ⟩
+            </button>
           </div>
         </div>
         <div className={styles.optionImage_container}>
-          <img src="/image/IMAGE1.png" alt="Option 1" className={styles.optionImage} />
-          <img src="/image/IMAGE2.png" alt="Option 2" className={styles.optionImage} />
-          <img src="/image/IMAGE3.png" alt="Option 3" className={styles.optionImage} />
+          <img
+            src="/image/IMAGE1.png"
+            alt="Option 1"
+            className={styles.optionImage}
+          />
+          <img
+            src="/image/IMAGE2.png"
+            alt="Option 2"
+            className={styles.optionImage}
+          />
+          <img
+            src="/image/IMAGE3.png"
+            alt="Option 3"
+            className={styles.optionImage}
+          />
         </div>
       </div>
       <div className={styles["Button-Container"]}>
         <div className={styles["Button-Item"]}>
-          <img src="/image/HOME.png" alt="Main" className={styles.ButtonImage} onClick={navigateMain} />
+          <img
+            src="/image/HOME.png"
+            alt="Main"
+            className={styles.ButtonImage}
+            onClick={navigateMain}
+          />
           <span className={styles.Span}>Main</span>
         </div>
         <div className={styles["Button-Item"]}>
-          <img src="/image/PAPAR.png" alt="Paper" className={styles.ButtonImage} onClick={navigateToRecordBody} />
+          <img
+            src="/image/PAPAR.png"
+            alt="Paper"
+            className={styles.ButtonImage}
+            onClick={navigateToRecordBody}
+          />
           <span className={styles.Span}>Paper</span>
         </div>
         <div className={styles["Button-Item"]}>
-          <img src="/image/Vector7.png" alt="Graph" className={styles.ButtonImage} onClick={navigateGraph} />
+          <img
+            src="/image/Vector7.png"
+            alt="Graph"
+            className={styles.ButtonImage}
+            onClick={navigateGraph}
+          />
           <span className={styles.Span}>Graph</span>
         </div>
         <div className={styles["Button-Item"]}>
-          <img src="/image/Vector8.png" alt="Food" className={styles.ButtonImage} onClick={navigateCalender} />
+          <img
+            src="/image/Vector8.png"
+            alt="Food"
+            className={styles.ButtonImage}
+            onClick={navigateCalender}
+          />
           <span className={styles.Span}>Food</span>
         </div>
         <div className={styles["Button-Item"]}>
-          <img src="/image/PEOPLE.png" alt="Logout" className={styles.ButtonImage} onClick={handleLogout} />
-          <span className={styles.Span}>Logout</span>
+          <img
+            src="/image/PEOPLE.png"
+            alt="Logout"
+            className={styles.ButtonImage}
+            onClick={navigateMyPage}
+          />
+          <span className={styles.Span}>Mypage</span>
         </div>
       </div>
     </div>

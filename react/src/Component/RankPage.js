@@ -50,6 +50,7 @@ export default function RankPage() {
   const navigateToRecordBody = () => navigate("/recordbody");
   const navigateCalender = () => navigate("/Calender");
   const navigateGraph = () => navigate("/Graph");
+  const navigateMyPage = () => navigate("/MyPage");
 
   // 로그아웃 처리
   const handleLogout = async () => {
@@ -299,9 +300,9 @@ export default function RankPage() {
             src="/image/PEOPLE.png"
             alt="Logout"
             className={styles["ButtonImage"]}
-            onClick={handleLogout}
+            onClick={navigateMyPage}
           />
-          <span className={styles["Span"]}>Logout</span>
+          <span className={styles["Span"]}>Mypage</span>
         </div>
       </div>
     </div>

@@ -2,21 +2,39 @@ import React, { useState, useEffect, useRef } from "react";
 import { useNavigate } from "react-router-dom";
 import config from "../config";
 import styles from "../Style/graph.module.css";
-import { LineChart, Line, XAxis, YAxis, CartesianGrid, Tooltip, Legend, ResponsiveContainer } from 'recharts';
+import {
+  LineChart,
+  Line,
+  XAxis,
+  YAxis,
+  CartesianGrid,
+  Tooltip,
+  Legend,
+  ResponsiveContainer,
+} from "recharts";
 
 export default function Graph() {
-  const useridRef = useRef(sessionStorage.getItem("userid"));// 유저 ID를 세션에서 가져와 저장함
+  const useridRef = useRef(sessionStorage.getItem("userid")); // 유저 ID를 세션에서 가져와 저장함
   const navigate = useNavigate();
 
-  const [bodyrecod, setBodyRecod] = useState([]);// 유저 신체 기록 데이터 상태
+  const [bodyrecod, setBodyRecod] = useState([]); // 유저 신체 기록 데이터 상태
   const [loading, setLoading] = useState(true); // 로딩 상태
   const [bmiData, setBmiData] = useState([]); // BMI 그래프에 사용할 데이터 상태
 
   // 페이지 이동 함수
-  const navigateMain = () => { navigate("/main"); };
-  const navigateToRecordBody = () => { navigate("/recordbody"); };
-  const navigateCalender = () => { navigate("/Calender"); };
-  const navigateRank = () => { navigate("/rank"); };
+  const navigateMain = () => {
+    navigate("/main");
+  };
+  const navigateToRecordBody = () => {
+    navigate("/recordbody");
+  };
+  const navigateCalender = () => {
+    navigate("/Calender");
+  };
+  const navigateRank = () => {
+    navigate("/rank");
+  };
+  const navigateMyPage = () => navigate("/MyPage");
 
   // 로그아웃 핸들러
   const handleLogout = async () => {
@@ -74,11 +92,14 @@ export default function Graph() {
         sessionStorage.setItem("userid", data.userid);
 
         // 사용자 신체 기록 가져오기
-        return fetch(`http://${config.SERVER_URL}/userinfobody/recentuserbody/${data.userid}`, {
-          method: "GET",
-          credentials: "include",
-          headers: { "Content-Type": "application/json" },
-        });
+        return fetch(
+          `http://${config.SERVER_URL}/userinfobody/recentuserbody/${data.userid}`,
+          {
+            method: "GET",
+            credentials: "include",
+            headers: { "Content-Type": "application/json" },
+          }
+        );
       })
       .then((response) => {
         if (!response.ok) {
@@ -120,10 +141,13 @@ export default function Graph() {
   useEffect(() => {
     if (bodyrecod.length > 0) {
       const newBmiData = [
-        { name: 'Day 1', bmi: bodyrecod[0].bmi }, 
-        { name: 'Day 2', bmi: bodyrecod[1]?.bmi || bodyrecod[0].bmi },
-        { name: 'Day 3', bmi: bodyrecod[2]?.bmi || bodyrecod[0].bmi },
-        { name: 'Today', bmi: bodyrecod[bodyrecod.length - 1]?.bmi || bodyrecod[0].bmi },
+        { name: "Day 1", bmi: bodyrecod[0].bmi },
+        { name: "Day 2", bmi: bodyrecod[1]?.bmi || bodyrecod[0].bmi },
+        { name: "Day 3", bmi: bodyrecod[2]?.bmi || bodyrecod[0].bmi },
+        {
+          name: "Today",
+          bmi: bodyrecod[bodyrecod.length - 1]?.bmi || bodyrecod[0].bmi,
+        },
       ];
       setBmiData(newBmiData);
     }
@@ -148,62 +172,123 @@ export default function Graph() {
       {useridRef.current ? (
         <>
           <div className={styles["Graph_Container"]}>
-            <img src="/image/black.png" alt="Background" className={styles["MainImage"]} />
+            <img
+              src="/image/black.png"
+              alt="Background"
+              className={styles["MainImage"]}
+            />
             <a className={styles["GraphTitle"]}>FitEnd</a>
             <div className={styles["Central_Menu"]}>
               <div className={styles["Inbodyscore_div"]}>
-                <p className={styles["inbodyscore"]}>{bodyrecod[0].inbodyScore}</p>
-                <p className={styles["inbodyscore_text"]}> Your InBody Ranking Score:</p>
+                <p className={styles["inbodyscore"]}>
+                  {bodyrecod[0].inbodyScore}
+                </p>
+                <p className={styles["inbodyscore_text"]}>
+                  {" "}
+                  Your InBody Ranking Score:
+                </p>
                 <p className={styles["graphtext"]}>Information</p>
               </div>
-              <ResponsiveContainer className={styles["recharts-responsive-container"]} width="100%" height={250}>
+              <ResponsiveContainer
+                className={styles["recharts-responsive-container"]}
+                width="100%"
+                height={250}
+              >
                 <LineChart data={bmiData}>
                   <CartesianGrid strokeDasharray="3 3" />
                   <XAxis dataKey="name" />
                   <YAxis />
                   <Tooltip />
                   <Legend />
-                  <Line type="monotone" dataKey="bmi" stroke="#C9F439" strokeWidth={2} />
+                  <Line
+                    type="monotone"
+                    dataKey="bmi"
+                    stroke="#C9F439"
+                    strokeWidth={2}
+                  />
                 </LineChart>
               </ResponsiveContainer>
               <div className={styles["container"]}>
                 <div className={styles["item"]}>
-                  <img src="/image/height_button.png" alt="Height" className={styles["icon"]} />
+                  <img
+                    src="/image/height_button.png"
+                    alt="Height"
+                    className={styles["icon"]}
+                  />
                   <p className={styles["text"]}>{bodyrecod[0].height} cm</p>
                 </div>
                 <div className={styles["item"]}>
-                  <img src="/image/weight_Button.png" alt="Weight" className={styles["icon"]} />
+                  <img
+                    src="/image/weight_Button.png"
+                    alt="Weight"
+                    className={styles["icon"]}
+                  />
                   <p className={styles["text"]}>{bodyrecod[0].weight} kg</p>
                 </div>
                 <div className={styles["item"]}>
-                  <img src="/image/PHbutton.png" alt="Body Fat" className={styles["icon"]} />
-                  <p className={styles["text"]}>{bodyrecod[0].fatpercentage} %</p>
+                  <img
+                    src="/image/PHbutton.png"
+                    alt="Body Fat"
+                    className={styles["icon"]}
+                  />
+                  <p className={styles["text"]}>
+                    {bodyrecod[0].fatpercentage} %
+                  </p>
                 </div>
                 <div className={styles["item"]}>
-                  <img src="/image/Bmi_button.png" alt="BMI" className={styles["icon"]} />
+                  <img
+                    src="/image/Bmi_button.png"
+                    alt="BMI"
+                    className={styles["icon"]}
+                  />
                   <p className={styles["text"]}>{bodyrecod[0].bmi}</p>
                 </div>
               </div>
               <div className={styles["Button-Container"]}>
                 <div className={styles["Button-Item"]}>
-                  <img src="/image/HOME.png" alt="Main" className={styles["ButtonImage"]} onClick={navigateMain} />
+                  <img
+                    src="/image/HOME.png"
+                    alt="Main"
+                    className={styles["ButtonImage"]}
+                    onClick={navigateMain}
+                  />
                   <span className={styles["Span"]}>Main</span>
                 </div>
                 <div className={styles["Button-Item"]}>
-                  <img src="/image/PAPAR.png" alt="Paper" className={styles["ButtonImage"]} onClick={navigateToRecordBody} />
+                  <img
+                    src="/image/PAPAR.png"
+                    alt="Paper"
+                    className={styles["ButtonImage"]}
+                    onClick={navigateToRecordBody}
+                  />
                   <span className={styles["Span"]}>Paper</span>
                 </div>
                 <div className={styles["Button-Item"]}>
-                  <img src="/image/Vector7.png" alt="rank" className={styles["ButtonImage"]} onClick={navigateRank} />
+                  <img
+                    src="/image/Vector7.png"
+                    alt="rank"
+                    className={styles["ButtonImage"]}
+                    onClick={navigateRank}
+                  />
                   <span className={styles["Span"]}>Rank</span>
                 </div>
                 <div className={styles["Button-Item"]}>
-                  <img src="/image/Vector8.png" alt="Food" className={styles["ButtonImage"]} onClick={navigateCalender} />
+                  <img
+                    src="/image/Vector8.png"
+                    alt="Food"
+                    className={styles["ButtonImage"]}
+                    onClick={navigateCalender}
+                  />
                   <span className={styles["Span"]}>Food</span>
                 </div>
                 <div className={styles["Button-Item"]}>
-                  <img src="/image/PEOPLE.png" alt="Logout" className={styles["ButtonImage"]} onClick={handleLogout} />
-                  <span className={styles["Span"]}>Logout</span>
+                  <img
+                    src="/image/PEOPLE.png"
+                    alt="Logout"
+                    className={styles["ButtonImage"]}
+                    onClick={navigateMyPage}
+                  />
+                  <span className={styles["Span"]}>Mypage</span>
                 </div>
               </div>
             </div>
