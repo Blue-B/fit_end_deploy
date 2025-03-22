@@ -35,7 +35,7 @@ import io.swagger.v3.oas.annotations.media.Schema;
 
 @RestController // rest api 보내는 컨트롤러
 @RequestMapping("/api")
-public class TestApi {
+public class OpenApi {
     @Autowired
     private JwtUtil jwtUtil;
 
