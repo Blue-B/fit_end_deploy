@@ -30,7 +30,7 @@ const MealCalendar = () => {
   };
 
   const handleLogout = async () => {
-    await fetch(`http://${config.SERVER_URL}/request/logout`, {
+    await fetch(`http://${config.SERVER_URL}/login/logout`, {
       method: "POST",
       credentials: "include",
     });
@@ -101,7 +101,7 @@ const MealCalendar = () => {
           }
 
           formattedData[dateKey].calories += record.enerc; // ✅ 'calories' 대신 'enerc' 사용
-          formattedData[dateKey].meal.push(record.dietMemo);
+          formattedData[dateKey].meal.push(record.foodNm);
         });
 
         console.log("변환된 mealRecords:", formattedData);
@@ -205,6 +205,7 @@ const MealCalendar = () => {
               {year}년 {month}월 {selectedDate}일 선택됨
             </p>
 
+<<<<<<< Updated upstream
             {mealRecords[
               `${year}-${month.toString().padStart(2, "0")}-${selectedDate
                 .toString()
@@ -227,10 +228,25 @@ const MealCalendar = () => {
                   }{" "}
                   kcal
                 </p>
+=======
+{/* 날짜 키 생성 및 조건부 렌더링 */}
+            {(() => {
+              const dateKey = `${year}-${month.toString().padStart(2, "0")}-${selectedDate.toString().padStart(2, "0")}`;
+              return mealRecords[dateKey] ? (
+
+              <>
+              <p className={styles["meal-data-text"]}>
+                {mealRecords[dateKey].meal.join(", ")}
+              </p>
+              <p className={styles["calorie-data-text"]}>
+                🔥 {mealRecords[dateKey].calories} kcal
+              </p>
+>>>>>>> Stashed changes
               </>
             ) : (
               <p className={styles["no-record-text"]}>기록 없음</p>
-            )}
+            );
+          })()}
             <button className={styles.eat} onClick={navigateFood}>
               <span className={styles.eat_yellow_button}>
                 Going to record food Click!
