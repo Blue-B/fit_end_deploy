@@ -29,6 +29,8 @@ const MealCalendar = () => {
     }
   };
 
+  const navigateCalender = () => navigate("/Calender");
+
   const handleLogout = async () => {
     await fetch(`http://${config.SERVER_URL}/login/logout`, {
       method: "POST",
@@ -120,18 +122,8 @@ const MealCalendar = () => {
   const daysInMonth = new Date(year, month, 0).getDate();
 
   const monthNames = [
-    "January",
-    "February",
-    "March",
-    "April",
-    "May",
-    "June",
-    "July",
-    "August",
-    "September",
-    "October",
-    "November",
-    "December",
+    "January", "February", "March", "April", "May", "June",
+    "July", "August", "September", "October", "November", "December"
   ];
 
   const changeMonth = (offset) => {
@@ -153,18 +145,12 @@ const MealCalendar = () => {
 
   return (
     <div className={styles.MealCalender_Container}>
-      <img
-        src="/image/black.png"
-        alt="Background"
-        className={styles.MealCalender_image}
-      />
+      <img src="/image/black.png" alt="Background" className={styles.MealCalender_image} />
       <a className={styles.MealCalender_title}>FitEnd</a>
       <div className={styles["meal-calendar"]}>
         <div className={styles["calendar-header"]}>
           <button onClick={() => changeMonth(-1)}>⟪</button>
-          <h2>
-            {monthNames[month - 1]} {year}
-          </h2>
+          <h2>{monthNames[month - 1]} {year}</h2>
           <button onClick={() => changeMonth(1)}>⟫</button>
         </div>
 
@@ -177,9 +163,7 @@ const MealCalendar = () => {
         <div className={styles["calendar-days"]}>
           {Array.from({ length: daysInMonth + startDay }).map((_, index) => {
             const day = index - startDay + 1;
-            const dateKey = `${year}-${month.toString().padStart(2, "0")}-${day
-              .toString()
-              .padStart(2, "0")}`;
+            const dateKey = `${year}-${month.toString().padStart(2, "0")}-${day.toString().padStart(2, "0")}`;
             const isSelected = selectedDate === day;
             const hasData = mealRecords[dateKey];
 
@@ -189,9 +173,7 @@ const MealCalendar = () => {
               <button
                 key={day}
                 onClick={() => handleDateClick(day)}
-                className={`${styles["calendar-day"]} ${
-                  isSelected ? styles.selected : ""
-                } ${hasData ? styles["has-data"] : ""}`}
+                className={`${styles["calendar-day"]} ${isSelected ? styles.selected : ""} ${hasData ? styles["has-data"] : ""}`}
               >
                 {day}
               </button>
@@ -205,30 +187,6 @@ const MealCalendar = () => {
               {year}년 {month}월 {selectedDate}일 선택됨
             </p>
 
-<<<<<<< Updated upstream
-            {mealRecords[
-              `${year}-${month.toString().padStart(2, "0")}-${selectedDate
-                .toString()
-                .padStart(2, "0")}`
-            ] ? (
-              <>
-                {/* <p className={styles["meal-data-text"]}>
-                  {mealRecords[`${year}-${month.toString().padStart(2, "0")}-${selectedDate.toString().padStart(2, "0")}`].meal.join(", ")}
-                </p> */}
-                <p className={styles["calorie-data-text"]}>
-                  🔥{" "}
-                  {
-                    mealRecords[
-                      `${year}-${month
-                        .toString()
-                        .padStart(2, "0")}-${selectedDate
-                        .toString()
-                        .padStart(2, "0")}`
-                    ].calories
-                  }{" "}
-                  kcal
-                </p>
-=======
 {/* 날짜 키 생성 및 조건부 렌더링 */}
             {(() => {
               const dateKey = `${year}-${month.toString().padStart(2, "0")}-${selectedDate.toString().padStart(2, "0")}`;
@@ -241,16 +199,13 @@ const MealCalendar = () => {
               <p className={styles["calorie-data-text"]}>
                 🔥 {mealRecords[dateKey].calories} kcal
               </p>
->>>>>>> Stashed changes
               </>
             ) : (
               <p className={styles["no-record-text"]}>기록 없음</p>
             );
           })()}
             <button className={styles.eat} onClick={navigateFood}>
-              <span className={styles.eat_yellow_button}>
-                Going to record food Click!
-              </span>
+              <span className={styles.eat_yellow_button}>Going to record food Click!</span>
             </button>
           </div>
         )}
@@ -288,7 +243,7 @@ const MealCalendar = () => {
             src="/image/Vector8.png"
             alt="Food"
             className={styles.ButtonImage}
-            onClick={navigateFood}
+            onClick={navigateCalender}
           />
           <span className={styles.Span}>Food</span>
         </div>
